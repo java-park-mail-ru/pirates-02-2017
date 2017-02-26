@@ -1,6 +1,10 @@
-package controllers;
+package api.controllers;
 
-import models.User;
+import api.model.User;
+import api.services.AccountService;
+import api.utils.CookieManager;
+import api.utils.GetUserInfo;
+import api.utils.SessionIdGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,16 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import services.AccountService;
-import utils.CookieManager;
-import utils.GetUserInfo;
-import utils.SessionIdGenerator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import static utils.CookieManager.COOKIE_AGE;
-import static utils.CookieManager.COOKIE_NAME;
 
 @RestController
 @RequestMapping(path = "/sessions")
@@ -56,7 +53,7 @@ public class SessionController {
         }
 
         final String sessionId = (new SessionIdGenerator()).nextSessionId();
-        CookieManager.addCookie(response, COOKIE_NAME, sessionId, COOKIE_AGE);
+        CookieManager.addCookie(response, CookieManager.COOKIE_NAME, sessionId, CookieManager.COOKIE_AGE);
 
         accountService.addSession(sessionId, user);
 
@@ -73,7 +70,7 @@ public class SessionController {
             produces = "application/json")
     public ResponseEntity<?> logoutUser(HttpServletRequest request, HttpServletResponse response) {
 
-        final String sessionId = CookieManager.getCookieValue(request, COOKIE_NAME);
+        final String sessionId = CookieManager.getCookieValue(request, CookieManager.COOKIE_NAME);
         final User user = accountService.getUserBySessionId(sessionId);
 
         // если user не нашелся
@@ -81,7 +78,7 @@ public class SessionController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        CookieManager.removeCookie(response, COOKIE_NAME);
+        CookieManager.removeCookie(response, CookieManager.COOKIE_NAME);
         accountService.removeSession(sessionId);
 
         return ResponseEntity.ok("{\"content\":\"Goodbye!\"}");
@@ -95,7 +92,7 @@ public class SessionController {
     @RequestMapping(path = "/current", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getLoggedUser(HttpServletRequest request) {
 
-        final String sessionId = CookieManager.getCookieValue(request, COOKIE_NAME);
+        final String sessionId = CookieManager.getCookieValue(request, CookieManager.COOKIE_NAME);
         final User currentUser = accountService.getUserBySessionId(sessionId);
 
         // если пользователь не нашелся
