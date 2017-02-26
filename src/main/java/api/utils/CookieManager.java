@@ -1,4 +1,4 @@
-package utils;
+package api.utils;
 
 import org.jetbrains.annotations.Nullable;
 

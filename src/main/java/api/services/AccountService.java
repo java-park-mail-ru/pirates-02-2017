@@ -1,6 +1,6 @@
-package services;
+package api.services;
 
-import models.User;
+import api.model.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
