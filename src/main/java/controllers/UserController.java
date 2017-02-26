@@ -9,7 +9,7 @@ import services.AccountService;
 import utils.GetUserInfo;
 
 @RestController
-@RequestMapping(path = "user")
+@RequestMapping(path = "/user")
 public class UserController {
 
     @NotNull
