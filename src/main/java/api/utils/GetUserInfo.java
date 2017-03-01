@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * дисиреализация информации о пользователе из Json
  */
 public final class GetUserInfo {
-    private String login = null;
-    private String email = null;
-    private String password = null;
+    private final String login;
+    private final String email;
+    private final String password;
 
     @JsonCreator
     GetUserInfo(@JsonProperty("login") String login, @JsonProperty("email") String email,

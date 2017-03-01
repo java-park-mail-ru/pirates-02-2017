@@ -1,6 +1,6 @@
 package api.model;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 public class User {
 
@@ -8,14 +8,16 @@ public class User {
     private final String login;
     private final String email;
     private final String password;
-    private final Calendar createdAt;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
-    public User(Long id, String login, String email, String password, Calendar createdAt) {
+    public User(Long id, String login, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.login = login;
         this.email = email;
         this.password = password;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public String getLogin() {
@@ -30,11 +32,15 @@ public class User {
         return password;
     }
 
-    public Calendar getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }

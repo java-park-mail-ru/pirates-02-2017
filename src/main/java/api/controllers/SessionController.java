@@ -2,19 +2,12 @@ package api.controllers;
 
 import api.model.User;
 import api.services.AccountService;
-import api.utils.CookieManager;
 import api.utils.GetUserInfo;
-import api.utils.SessionIdGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping(path = "/sessions")
@@ -22,6 +15,7 @@ public class SessionController {
 
     @NotNull
     private final AccountService accountService;
+    private static final String USER_LOGIN = "USER_ID";
 
     public SessionController(@NotNull AccountService accountService) {
         this.accountService = accountService;
@@ -31,18 +25,15 @@ public class SessionController {
     /**
      * Залогинить пользователя
      * @param requestBody login и password из тела запроса в json
-     * @param response объект <code>HttpServletResponse</code> сессии пользователя
+     * @param session объект <code>HttpSession</code> сессии пользователя
      * @return json <code>User</code> ответ если OK, иначе <code>HTTP</code> код соответсвующей ошибки
      */
-    @RequestMapping(path = "/login", method = RequestMethod.POST,
-            consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> loginUser(@RequestBody GetUserInfo requestBody, HttpServletResponse response) {
 
-        final String login = requestBody.getLogin();
-        final String password = requestBody.getPassword();
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody GetUserInfo requestBody, HttpSession session) {
 
         // некорректный запрос
-        if (login == null || password == null) {
+        if (requestBody.getLogin() == null || requestBody.getPassword() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
@@ -52,48 +43,45 @@ public class SessionController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        final String sessionId = (new SessionIdGenerator()).nextSessionId();
-        CookieManager.addCookie(response, CookieManager.COOKIE_NAME, sessionId, CookieManager.COOKIE_AGE);
-
-        accountService.addSession(sessionId, user);
+        session.setAttribute(USER_LOGIN, user.getLogin());
 
         return ResponseEntity.ok("{\"content\":\"successful login\"}");
     }
 
     /**
      * Разлогин
-     * @param request объект <code>HttpServletRequest</code> запрос
-     * @param response объект <code>HttpServletResponse</code> ответ
+     * @param session объект <code>HttpSession</code> сессии
      * @return json ответ если OK, иначе <code>HTTP</code> код соответсвующей ошибки
      */
-    @RequestMapping(path = "/logout", method = RequestMethod.DELETE,
-            produces = "application/json")
-    public ResponseEntity<?> logoutUser(HttpServletRequest request, HttpServletResponse response) {
-
-        final String sessionId = CookieManager.getCookieValue(request, CookieManager.COOKIE_NAME);
-        final User user = accountService.getUserBySessionId(sessionId);
+    @DeleteMapping("/logout")
+    public ResponseEntity<?> logoutUser(HttpSession session) {
 
         // если user не нашелся
-        if (user == null) {
+        if (session.getAttribute(USER_LOGIN) == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        CookieManager.removeCookie(response, CookieManager.COOKIE_NAME);
-        accountService.removeSession(sessionId);
-
+        session.invalidate();
         return ResponseEntity.ok("{\"content\":\"Goodbye!\"}");
     }
 
     /**
      * Вернуть залогиненного пользователя
-     * @param request объект <code>HttpServletRequest</code>
+     * @param session объект <code>HttpSession</code> сессии
      * @return json <code>User</code>
      */
-    @RequestMapping(path = "/current", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<?> getLoggedUser(HttpServletRequest request) {
+    @GetMapping("/current")
+    public ResponseEntity<?> getLoggedUser(HttpSession session) {
 
-        final String sessionId = CookieManager.getCookieValue(request, CookieManager.COOKIE_NAME);
-        final User currentUser = accountService.getUserBySessionId(sessionId);
+        final User currentUser;
+        final Object login = session.getAttribute(USER_LOGIN);
+
+        // атрибут сессии существует
+        if (login instanceof String) {
+            currentUser = accountService.getUserByLogin((String) login);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
 
         // если пользователь не нашелся
         if (currentUser == null) {
