@@ -24,8 +24,7 @@ public class UserController {
      * @param requestBody json логин
      * @return json user
      */
-    @RequestMapping(path = "/", method = RequestMethod.GET,
-            produces = "application/json", consumes = "application/json")
+    @GetMapping("/")
     public ResponseEntity<?> showUser(@RequestBody GetUserInfo requestBody) {
         final User user = accountService.getUserByLogin(requestBody.getLogin());
         if (user == null) {
@@ -40,8 +39,7 @@ public class UserController {
      * @param requestBody <code>login, email, password</code> в формате json
      * @return json сообщение об исходе операции
      */
-    @RequestMapping(path = "/", method = RequestMethod.POST,
-            consumes = "application/json", produces = "application/json")
+    @PostMapping("/")
     public ResponseEntity<?> createUser(@RequestBody GetUserInfo requestBody) {
         if (accountService.register(requestBody.getLogin(), requestBody.getEmail(),
                 requestBody.getPassword())) {
@@ -56,12 +54,11 @@ public class UserController {
      * @param requestBody login из json
      * @return json сообщение об исходе операции
      */
-
-    @RequestMapping(path = "/", method = RequestMethod.DELETE,
-            consumes = "application/json", produces = "application/json")
+    @DeleteMapping("/")
     public ResponseEntity<?> deleteUser(@RequestBody GetUserInfo requestBody) {
+
         if (accountService.delete(requestBody.getLogin())) {
-            return ResponseEntity.ok("{\"content\":\"successful delete user\"");
+            return ResponseEntity.ok("{\"content\":\"successful delete user\"}");
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error-message\":\"user not found\"}");

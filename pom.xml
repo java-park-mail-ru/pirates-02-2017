@@ -5,12 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.mail.park</groupId>
-    <artifactId>M.O.T.I.O.N</artifactId>
+    <artifactId>pirates</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <java-version>1.8</java-version>
-        <sl4j-version>1.5.8</sl4j-version>
+        <java.version>1.8</java.version>
     </properties>
 
     <parent>
@@ -39,6 +38,10 @@
             <artifactId>annotations</artifactId>
             <version>12.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -46,14 +49,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
             </plugin>
         </plugins>
     </build>
