@@ -2,7 +2,11 @@ package api.controllers;
 
 import api.model.User;
 import api.services.AccountService;
+import api.utils.ErrorCodes;
 import api.utils.GetUserInfo;
+import api.utils.Response;
+import api.utils.ResponseGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +28,7 @@ public class UserController {
      * @param requestBody json логин
      * @return json user
      */
-    @GetMapping("/")
+    @PostMapping("/getByLogin")
     public ResponseEntity<?> showUser(@RequestBody GetUserInfo requestBody) {
         final User user = accountService.getUserByLogin(requestBody.getLogin());
         if (user == null) {
@@ -39,14 +43,23 @@ public class UserController {
      * @param requestBody <code>login, email, password</code> в формате json
      * @return json сообщение об исходе операции
      */
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody GetUserInfo requestBody) {
         if (accountService.register(requestBody.getLogin(), requestBody.getEmail(),
                 requestBody.getPassword())) {
-            return ResponseEntity.ok("{\"content\":\"you are signed up!\"}");
+
+            return ResponseEntity.ok(ResponseGenerator.toJSONWithStatus(
+                    new Response(),
+                    ErrorCodes.SUCCESS,
+                    "User created"
+                    ));
         }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error-message\":\"user already exist\"}");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseGenerator.toJSONWithStatus(
+                new Response(),
+                ErrorCodes.USER_ALREADY_EXISTS,
+                "User already exists"
+        ));
     }
 
     /**
@@ -54,7 +67,7 @@ public class UserController {
      * @param requestBody login из json
      * @return json сообщение об исходе операции
      */
-    @DeleteMapping("/")
+    @PostMapping("/delete")
     public ResponseEntity<?> deleteUser(@RequestBody GetUserInfo requestBody) {
 
         if (accountService.delete(requestBody.getLogin())) {

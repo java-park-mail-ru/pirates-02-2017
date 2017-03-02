@@ -12,21 +12,20 @@ public final class GetUserInfo {
     private final String password;
 
     @JsonCreator
-    GetUserInfo(@JsonProperty("login") String login, @JsonProperty("email") String email,
-                @JsonProperty("password") String password) {
+    GetUserInfo(
+            @JsonProperty(value = "login", required = true) String login,
+            @JsonProperty(value = "email", required = true) String email,
+            @JsonProperty(value = "password", required = true) String password
+    ) {
         this.login = login;
         this.email = email;
         this.password = password;
     }
 
-    public String getLogin() {
-        return login;
-    }
-
+    public String getLogin() { return login; }
     public String getEmail() {
         return email;
     }
-
     public String getPassword() {
         return password;
     }
