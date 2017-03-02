@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * дисиреализация информации о пользователе из Json
  */
-public final class GetUserInfo {
+public final class UserCreationInfo {
     private final String login;
     private final String email;
     private final String password;
 
     @JsonCreator
-    GetUserInfo(
+    UserCreationInfo(
             @JsonProperty(value = "login", required = true) String login,
             @JsonProperty(value = "email", required = true) String email,
             @JsonProperty(value = "password", required = true) String password
@@ -23,10 +23,6 @@ public final class GetUserInfo {
     }
 
     public String getLogin() { return login; }
-    public String getEmail() {
-        return email;
-    }
-    public String getPassword() {
-        return password;
-    }
+    public String getEmail() { return email; }
+    public String getPassword() { return password; }
 }

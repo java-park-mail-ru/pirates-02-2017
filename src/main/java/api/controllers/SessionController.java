@@ -2,7 +2,7 @@ package api.controllers;
 
 import api.model.User;
 import api.services.AccountService;
-import api.utils.GetUserInfo;
+import api.utils.UserCreationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class SessionController {
      */
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody GetUserInfo requestBody, HttpSession session) {
+    public ResponseEntity<?> loginUser(@RequestBody UserCreationInfo requestBody, HttpSession session) {
 
         // некорректный запрос
         if (requestBody.getLogin() == null || requestBody.getPassword() == null) {
@@ -38,7 +38,7 @@ public class SessionController {
         }
 
         // аутентификация
-        final User user = accountService.authenticate(requestBody.getLogin(), requestBody.getPassword());
+        final User user = accountService.authenticateUser(requestBody.getLogin(), requestBody.getPassword());
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
