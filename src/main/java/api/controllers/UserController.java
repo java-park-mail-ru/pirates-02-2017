@@ -36,7 +36,7 @@ public class UserController {
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseGenerator.toJSONWithStatus(
-                    new Response()git ,
+                    new Response(),
                     ErrorCodes.USER_NOT_FOUND,
                     "User not found"
             ));

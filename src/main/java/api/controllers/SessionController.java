@@ -2,7 +2,7 @@ package api.controllers;
 
 import api.model.User;
 import api.services.AccountService;
-import api.utils.UserCreationInfo;
+import api.utils.UserAuthInfo;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping(path = "/sessions")
+@RequestMapping(path = "/session")
 public class SessionController {
 
     @NotNull
@@ -30,12 +30,12 @@ public class SessionController {
      */
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserCreationInfo requestBody, HttpSession session) {
+    public ResponseEntity<?> loginUser(@RequestBody UserAuthInfo requestBody, HttpSession session) {
 
         // некорректный запрос
-        if (requestBody.getLogin() == null || requestBody.getPassword() == null) {
+        /*if (requestBody.getLogin() == null || requestBody.getPassword() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+        }*/
 
         // аутентификация
         final User user = accountService.authenticateUser(requestBody.getLogin(), requestBody.getPassword());
