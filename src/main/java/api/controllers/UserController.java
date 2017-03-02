@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.time.ZoneOffset;
 
 @RestController
@@ -75,6 +76,37 @@ public class UserController {
                 new Response(),
                 ErrorCodes.USER_ALREADY_EXISTS,
                 "User already exists"
+        ));
+    }
+
+    @PostMapping("/change")
+    public ResponseEntity<?> changeUser(@RequestBody UserCreationInfo requestBody, HttpSession session) {
+
+        User currentUser;
+        Object login;
+
+        try {
+            login = session.getAttribute(SessionController.USER_LOGIN);
+            currentUser = accountService.getUserByLogin(login.toString());
+
+            if (currentUser == null) {
+                throw new NullPointerException();
+            }
+        } catch (IllegalStateException | NullPointerException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseGenerator.toJSONWithStatus(
+                    new Response(),
+                    ErrorCodes.SESSION_INVALID,
+                    "Invalid session"
+            ));
+        }
+
+        accountService.deleteUser(login.toString());
+        accountService.createUser(login.toString(), requestBody.getEmail(), requestBody.getPassword());
+
+        return ResponseEntity.ok(ResponseGenerator.toJSONWithStatus(
+                new Response(),
+                ErrorCodes.SUCCESS,
+                "User info changed"
         ));
     }
 

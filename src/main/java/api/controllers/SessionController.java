@@ -18,7 +18,7 @@ public class SessionController {
 
     @NotNull
     private final AccountService accountService;
-    private static final String USER_LOGIN = "USER_ID";
+    public static final String USER_LOGIN = "USER_ID";
 
     public SessionController(@NotNull AccountService accountService) {
         this.accountService = accountService;
@@ -34,11 +34,6 @@ public class SessionController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserAuthInfo requestBody, HttpSession session) {
-
-        // некорректный запрос
-        /*if (requestBody.getLogin() == null || requestBody.getPassword() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }*/
 
         final User user = accountService.authenticateUser(requestBody.getLogin(), requestBody.getPassword());
         if (user == null) {
@@ -65,13 +60,7 @@ public class SessionController {
      */
     @GetMapping("/logout")
     public ResponseEntity<?> logoutUser(HttpSession session) {
-
-        // если user не нашелся
-        /*if (session.getAttribute(USER_LOGIN) == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }*/
-
-        //session.invalidate();
+        session.invalidate();
         return ResponseEntity.ok(ResponseGenerator.toJSONWithStatus(new Response()));
     }
 
@@ -88,22 +77,13 @@ public class SessionController {
 
         try {
             login = session.getAttribute(USER_LOGIN);
+            currentUser = accountService.getUserByLogin(login.toString());
 
-            if (login == null) {
-                throw new IllegalStateException();
+            if (currentUser == null) {
+                throw new NullPointerException();
             }
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | NullPointerException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseGenerator.toJSONWithStatus(
-                    new Response(),
-                    ErrorCodes.SESSION_INVALID,
-                    "Invalid session"
-            ));
-        }
-
-        currentUser = accountService.getUserByLogin(login.toString());
-
-        if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseGenerator.toJSONWithStatus(
                     new Response(),
                     ErrorCodes.SESSION_INVALID,
                     "Invalid session"
