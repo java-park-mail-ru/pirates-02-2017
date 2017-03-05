@@ -2,18 +2,17 @@ package api.controllers;
 
 import api.model.User;
 import api.services.AccountService;
-import api.utils.ErrorCodes;
 import api.utils.UserCreationInfo;
 import api.utils.UserLoginInfo;
 import api.utils.Response;
-import api.utils.ResponseGenerator;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.time.ZoneOffset;
+
+import static api.controllers.SessionController.USER_ID;
+import static api.controllers.SessionController.USER_LOGIN;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -26,31 +25,37 @@ public class UserController {
         this.accountService = accountService;
     }
 
+
+    /**
+     * Вернуть пользователя по id
+     * @param id идентификатор пользователя
+     * @return json с сериализованным <code>User</code> объектом
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        final User user = accountService.getUserById(id);
+        if (user == null) {
+            return Response.userNotFound();
+        }
+
+        return Response.okWithUser(user, "success");
+    }
+
+
     /**
      * Вернуть пользователя по логину
      * @param requestBody json логин
      * @return json user
      */
     @PostMapping("/getByLogin")
-    public ResponseEntity<?> showUser(@RequestBody UserLoginInfo requestBody) {
+    public ResponseEntity<?> getUserbyLogin(@RequestBody UserLoginInfo requestBody) {
         final User user = accountService.getUserByLogin(requestBody.getLogin());
 
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseGenerator.toJSONWithStatus(
-                    new Response(),
-                    ErrorCodes.USER_NOT_FOUND,
-                    "User not found"
-            ));
+            return Response.userNotFound();
         }
 
-        return ResponseEntity.ok(ResponseGenerator.toJSONWithStatus(
-                new Response() {
-                    public String login = user.getLogin();
-                    public String email = user.getEmail();
-                    public long createdAt = user.getCreatedAt().toEpochSecond(ZoneOffset.UTC);
-                    public long updatedAt = user.getUpdatedAt().toEpochSecond(ZoneOffset.UTC);
-                }
-        ));
+        return Response.okWithUser(user, "success");
     }
 
     /**
@@ -60,79 +65,67 @@ public class UserController {
      */
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserCreationInfo requestBody) {
-        if (accountService.createUser(requestBody.getLogin(), requestBody.getEmail(),
-                requestBody.getPassword())) {
-
-            return ResponseEntity.ok(ResponseGenerator.toJSONWithStatus(
-                    new Response() {
-                        public String login = requestBody.getLogin();
-                    },
-                    ErrorCodes.SUCCESS,
-                    "User created"
-                    ));
+        if (accountService.createUser(requestBody)) {
+            return Response.okWithLogin(requestBody.getLogin(), "User created");
         }
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseGenerator.toJSONWithStatus(
-                new Response(),
-                ErrorCodes.USER_ALREADY_EXISTS,
-                "User already exists"
-        ));
+        return Response.userAlreadyExists();
     }
 
     @PostMapping("/change")
     public ResponseEntity<?> changeUser(@RequestBody UserCreationInfo requestBody, HttpSession session) {
 
-        User currentUser;
-        Object login;
+//        final Object login;
+//
+//        try {
+//            login = session.getAttribute(SessionController.USER_LOGIN);
+//            final User currentUser = accountService.getUserByLogin(login.toString());
+//
+//            if (currentUser == null) {
+//                throw new NullPointerException();
+//            }
+//        } catch (IllegalStateException | NullPointerException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseGenerator.toJSONWithStatus(
+//                    new Response(status, error),
+//                    ErrorCodes.SESSION_INVALID,
+//                    "Invalid session"
+//            ));
+//        }
 
-        try {
-            login = session.getAttribute(SessionController.USER_LOGIN);
-            currentUser = accountService.getUserByLogin(login.toString());
+        // ToDO: дождаться ответа про обработку исключений! А пока так:
+        final Object id = session.getAttribute(USER_ID);
 
-            if (currentUser == null) {
-                throw new NullPointerException();
+        if (id instanceof Long) {
+            if (!accountService.changeUserById((Long) id, requestBody)) {
+                return Response.invalidSession();
             }
-        } catch (IllegalStateException | NullPointerException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseGenerator.toJSONWithStatus(
-                    new Response(),
-                    ErrorCodes.SESSION_INVALID,
-                    "Invalid session"
-            ));
+        } else {
+            return Response.invalidSession();
         }
 
-        accountService.deleteUser(login.toString());
-        accountService.createUser(login.toString(), requestBody.getEmail(), requestBody.getPassword());
-
-        return ResponseEntity.ok(ResponseGenerator.toJSONWithStatus(
-                new Response(),
-                ErrorCodes.SUCCESS,
-                "User info changed"
-        ));
+        return Response.ok("User info changed");
     }
 
     /**
-     * Удалить пользователя
-     * @param requestBody login из json
+     * Удалить пользователя по логину
+     * @param session объект <code>HttpSession</code> сессии пользователя
      * @return json сообщение об исходе операции
      */
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteUser(@RequestBody UserLoginInfo requestBody) {
+    public ResponseEntity<?> deleteUser(HttpSession session) {
 
-        if (accountService.deleteUser(requestBody.getLogin())) {
-            return ResponseEntity.ok(ResponseGenerator.toJSONWithStatus(
-                    new Response() {
-                        public String login = requestBody.getLogin();
-                    },
-                    ErrorCodes.SUCCESS,
-                    "User deleted"
-            ));
+        final Object id = session.getAttribute(USER_LOGIN);
+
+        if (id instanceof Long) {
+            if (!accountService.deleteUserbyId((Long) id)) {
+                return Response.invalidSession();
+            }
+        } else {
+            return Response.invalidSession();
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseGenerator.toJSONWithStatus(
-                new Response(),
-                ErrorCodes.USER_NOT_FOUND,
-                "User not found"
-        ));
+        // ToDO: пользователя же надо разлогинить?
+        session.invalidate();
+        return Response.ok("User deleted");
     }
 
 }
