@@ -71,6 +71,13 @@ public class UserController {
         return Response.userAlreadyExists();
     }
 
+
+    /**
+     * Изменение данных пользователя
+     * @param requestBody тело запроса с новыми данными
+     * @param session объект <code>HttpSession</code> сессии пользователя
+     * @return json сообщение об исходе операции
+     */
     @PostMapping("/change")
     public ResponseEntity<?> changeUser(@RequestBody UserCreationInfo requestBody, HttpSession session) {
 
