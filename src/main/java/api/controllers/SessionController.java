@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
+@CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
+        "http://localhost", "http://127.0.0.1"})
 @RestController
 @RequestMapping(path = "/session")
 public class SessionController {
