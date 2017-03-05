@@ -8,9 +8,7 @@ import api.utils.Response;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
-
 import static api.controllers.SessionController.USER_ID;
 import static api.controllers.SessionController.USER_LOGIN;
 
