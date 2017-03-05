@@ -4,7 +4,6 @@ import api.model.User;
 import api.services.AccountService;
 import api.utils.ErrorCodes;
 import api.utils.Response;
-import api.utils.ResponseGenerator;
 import api.utils.UserAuthInfo;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,8 @@ public class SessionController {
 
     @NotNull
     private final AccountService accountService;
-    public static final String USER_LOGIN = "USER_ID";
+    public static final String USER_LOGIN = "USER_LOGIN";
+    public static final String USER_ID = "USER_ID";
 
     public SessionController(@NotNull AccountService accountService) {
         this.accountService = accountService;
@@ -37,20 +37,13 @@ public class SessionController {
 
         final User user = accountService.authenticateUser(requestBody.getLogin(), requestBody.getPassword());
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseGenerator.toJSONWithStatus(
-                    new Response(),
-                    ErrorCodes.BAD_LOGIN_OR_PASSWORD,
-                    "Bad login or password"
-            ));
+            return Response.badLoginOrPassword();
         }
 
         session.setAttribute(USER_LOGIN, user.getLogin());
+        session.setAttribute(USER_ID, user.getId());
 
-        return ResponseEntity.ok(ResponseGenerator.toJSONWithStatus(
-                new Response(),
-                ErrorCodes.SUCCESS,
-                "Logged in"
-        ));
+        return Response.ok("Logged in");
     }
 
     /**
@@ -58,10 +51,10 @@ public class SessionController {
      * @param session объект <code>HttpSession</code> сессии
      * @return json ответ если OK, иначе <code>HTTP</code> код соответсвующей ошибки
      */
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity<?> logoutUser(HttpSession session) {
         session.invalidate();
-        return ResponseEntity.ok(ResponseGenerator.toJSONWithStatus(new Response()));
+        return Response.ok("User deleted");
     }
 
     /**
@@ -72,30 +65,45 @@ public class SessionController {
     @GetMapping("/current")
     public ResponseEntity<?> getLoggedUser(HttpSession session) {
 
-        User currentUser;
-        Object login;
+//        try {
+//            login = session.getAttribute(USER_LOGIN);
+//            currentUser = accountService.getUserByLogin(login.toString());
+//
+//            if (currentUser == null) {
+//                throw new NullPointerException();
+//            }
+//        } catch (IllegalStateException | NullPointerException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseGenerator.toJSONWithStatus(
+//                    new Response(status, error),
+//                    ErrorCodes.SESSION_INVALID,
+//                    "Invalid session"
+//            ));
+//        }
+//
+//        return ResponseEntity.ok(ResponseGenerator.toJSONWithStatus(
+//                new Response(status, error) {
+//                    public String login = currentUser.getLogin();
+//                },
+//                ErrorCodes.SUCCESS,
+//                "Ok"
+//        ));
 
-        try {
-            login = session.getAttribute(USER_LOGIN);
-            currentUser = accountService.getUserByLogin(login.toString());
+        final User currentUser;
+        final Object login;
 
+        final Object id = session.getAttribute(USER_ID);
+
+        if (id instanceof Long) {
+            currentUser = accountService.getUserById((Long) id);
             if (currentUser == null) {
-                throw new NullPointerException();
+                return Response.invalidSession();
             }
-        } catch (IllegalStateException | NullPointerException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseGenerator.toJSONWithStatus(
-                    new Response(),
-                    ErrorCodes.SESSION_INVALID,
-                    "Invalid session"
-            ));
+        } else {
+            return Response.invalidSession();
         }
 
-        return ResponseEntity.ok(ResponseGenerator.toJSONWithStatus(
-                new Response() {
-                    public String login = currentUser.getLogin();
-                },
-                ErrorCodes.SUCCESS,
-                "Ok"
-        ));
+        return Response.okWithUser(currentUser, "success");
+
+
     }
 }
