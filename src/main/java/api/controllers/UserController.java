@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 import static api.controllers.SessionController.USER_ID;
 import static api.controllers.SessionController.USER_LOGIN;
 
+@CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
+        "http://localhost", "http://127.0.0.1"})
 @RestController
 @RequestMapping(path = "/user")
 public class UserController {
@@ -71,6 +73,13 @@ public class UserController {
         return Response.userAlreadyExists();
     }
 
+
+    /**
+     * Изменение данных пользователя
+     * @param requestBody тело запроса с новыми данными
+     * @param session объект <code>HttpSession</code> сессии пользователя
+     * @return json сообщение об исходе операции
+     */
     @PostMapping("/change")
     public ResponseEntity<?> changeUser(@RequestBody UserCreationInfo requestBody, HttpSession session) {
 
