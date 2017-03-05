@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class AccountService {
 
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
     private final Map<String, User> loginToUser = new ConcurrentHashMap<>();
     private final AtomicLong counter = new AtomicLong();
 
@@ -24,8 +24,7 @@ public class AccountService {
     }
 
 
-    public boolean register(@NotNull String login, @NotNull String email, @NotNull String password) {
-
+    public boolean createUser(@NotNull String login, @NotNull String email, @NotNull String password) {
         if (!loginToUser.containsKey(login)) {
             final String encodedPassword = encoder.encode(password);
             final User newUser = new User(counter.incrementAndGet(),
@@ -39,13 +38,13 @@ public class AccountService {
     }
 
 
-    public boolean delete(String login) {
+    public boolean deleteUser(@NotNull String login) {
         return loginToUser.remove(login) != null;
     }
 
 
     @Nullable
-    public User authenticate(@NotNull String login, @NotNull String password) {
+    public User authenticateUser(@NotNull String login, @NotNull String password) {
         if (loginToUser.containsKey(login)) {
             final User user = loginToUser.get(login);
             if (user != null && encoder.matches(password, user.getPassword())) {
@@ -56,7 +55,7 @@ public class AccountService {
     }
 
 
-    public User getUserByLogin(String login) {
+    public User getUserByLogin(@NotNull String login) {
         return loginToUser.get(login);
     }
 
