@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 //import org.springframework.context.annotation.Bean;
 
@@ -15,6 +16,8 @@ import java.util.List;
  */
 
 public class PasswordValidator extends Validator {
+
+    Pattern pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$");
 
     @Override
     @NotNull
@@ -25,14 +28,17 @@ public class PasswordValidator extends Validator {
         if (value.length() < min || value.length() > max) {
             messages.add(
                     new ValidatorMessage(ValidatorStatus.ERROR,
-                    "Password must be between 3 and 30 symbols"
+                    "Пароль должен быть от 3 до 30 символов длиной."
                     ));
-        } else {
+        };
+
+        //if (value.co)
+
             messages.add(
                     new ValidatorMessage(ValidatorStatus.OK,
-                            "Your password is great!"
+                            "Хороший пароль. <strong>Вы замечательны!</strong>"
                     ));
-        }
+        //}
 
         return messages;
     }
