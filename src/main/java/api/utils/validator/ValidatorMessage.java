@@ -2,10 +2,6 @@ package api.utils.validator;
 
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Created by coon on 08.03.17.
- */
-
 
 public class ValidatorMessage {
 

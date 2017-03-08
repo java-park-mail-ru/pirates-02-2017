@@ -1,6 +1,6 @@
 package api.controllers;
 
-import api.utils.info.ValidationInfo;
+import api.utils.info.ValueInfo;
 import api.utils.response.Response;
 import api.utils.validator.Validator;
 import api.utils.validator.ValidatorMessage;
@@ -10,10 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
-/**
- * Created by coon on 08.03.17.
- */
-
+@CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
+        "http://localhost", "http://127.0.0.1"})
 @RestController
 @RequestMapping(path = "/validator")
 public class ValidatorController {
@@ -32,7 +30,7 @@ public class ValidatorController {
      * @return json с результатом работы валидатора
      */
     @PostMapping("/{name}")
-    public ResponseEntity<?> getUserById(@PathVariable String name, @RequestBody ValidationInfo validation) {
+    public ResponseEntity<?> getUserById(@PathVariable String name, @RequestBody ValueInfo validation) {
         final Object validator;
 
         try {

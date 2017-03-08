@@ -20,7 +20,7 @@ public enum ValidatorStatus {
     private final String text;
 
 
-    private ValidatorStatus(final String text) {
+    ValidatorStatus(final String text) {
         this.text = text;
     }
 

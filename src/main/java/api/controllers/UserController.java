@@ -3,12 +3,15 @@ package api.controllers;
 import api.model.User;
 import api.services.AccountService;
 import api.utils.info.UserCreationInfo;
-import api.utils.info.UserLoginInfo;
-import api.utils.response.Response;
+import api.utils.info.UserIdInfo;
+import api.utils.info.ValueInfo;
+import api.utils.response.*;
+import api.utils.response.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
+
 import static api.controllers.SessionController.USER_ID;
 import static api.controllers.SessionController.USER_LOGIN;
 
@@ -28,29 +31,12 @@ public class UserController {
 
     /**
      * Вернуть пользователя по id
-     * @param id идентификатор пользователя
+     * @param requestBody идентификатор пользователя
      * @return json с сериализованным <code>User</code> объектом
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        final User user = accountService.getUserById(id);
-        if (user == null) {
-            return Response.userNotFound();
-        }
-
-        return Response.okWithUser(user, "success");
-    }
-
-
-    /**
-     * Вернуть пользователя по логину
-     * @param requestBody json логин
-     * @return json user
-     */
-    @PostMapping("/getByLogin")
-    public ResponseEntity<?> getUserbyLogin(@RequestBody UserLoginInfo requestBody) {
-        final User user = accountService.getUserByLogin(requestBody.getLogin());
-
+    @PostMapping("/getById")
+    public ResponseEntity<?> getUserById(@RequestBody UserIdInfo requestBody) {
+        final User user = accountService.getUserById(requestBody.getId());
         if (user == null) {
             return Response.userNotFound();
         }
@@ -64,52 +50,78 @@ public class UserController {
      * @return json сообщение об исходе операции
      */
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody UserCreationInfo requestBody) {
-        if (accountService.createUser(requestBody)) {
-            return Response.okWithLogin(requestBody.getLogin(), "User created");
+    public ResponseEntity<ResponseBody> createUser(@RequestBody UserCreationInfo requestBody) {
+//  ToDo: сделать валидацию полеть в контроллере создания пользователя
+        if (true) {
+            return Response.ok("User created");
         }
         return Response.userAlreadyExists();
     }
 
-
     /**
-     * Изменение данных пользователя
-     * @param requestBody тело запроса с новыми данными
-     * @param session объект <code>HttpSession</code> сессии пользователя
-     * @return json сообщение об исходе операции
+     * Изменить логин пользователя текущей сессии
+     * @param requestBody тело запроса с логином
+     * @param session объект сессии
+     * @return json с результатом работы
      */
-    @PostMapping("/change")
-    public ResponseEntity<?> changeUser(@RequestBody UserCreationInfo requestBody, HttpSession session) {
-
-//        final Object login;
-//
-//        try {
-//            login = session.getAttribute(SessionController.USER_LOGIN);
-//            final User currentUser = accountService.getUserByLogin(login.toString());
-//
-//            if (currentUser == null) {
-//                throw new NullPointerException();
-//            }
-//        } catch (IllegalStateException | NullPointerException e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseGenerator.toJSONWithStatus(
-//                    new Response(status, error),
-//                    ErrorCodes.SESSION_INVALID,
-//                    "Invalid session"
-//            ));
-//        }
-
-        // ToDO: дождаться ответа про обработку исключений! А пока так:
-        final Object id = session.getAttribute(USER_ID);
-
-        if (id instanceof Long) {
-            if (!accountService.changeUserById((Long) id, requestBody)) {
+    @PostMapping("/changeLogin")
+    public ResponseEntity<ResponseBody> changeUserLogin(@RequestBody ValueInfo requestBody, HttpSession session) {
+        // ToDo: валидация
+        if (true) {
+            Object id = session.getAttribute(USER_ID);
+            if (id instanceof Long) {
+                accountService.changeLogin((Long) id, requestBody.getValue());
+                return Response.ok("Login changed");
+            } else {
                 return Response.invalidSession();
             }
         } else {
-            return Response.invalidSession();
+            return Response.badValidator();
         }
+    }
 
-        return Response.ok("User info changed");
+    /**
+     * Изменить email пользователя текущей сессии
+     * @param requestBody тело запроса с новым email
+     * @param session объект сессии
+     * @return json сообщение об исходи операции
+     */
+    @PostMapping("/changeEmail")
+    public ResponseEntity<ResponseBody> changeUserEmail(@RequestBody ValueInfo requestBody, HttpSession session) {
+        // ToDo: валидация
+        if (true) {
+            Object id = session.getAttribute(USER_ID);
+            if (id instanceof Long) {
+                accountService.changeEmail((Long) id, requestBody.getValue());
+                return Response.ok("Email changed");
+            } else {
+                return Response.invalidSession();
+            }
+        } else {
+            return Response.badValidator();
+        }
+    }
+
+    /**
+     * Изменить пароль пользователя текущей сессии
+     * @param requestBody тело запроса с новым паролем
+     * @param session объект сессии
+     * @return json сообщение о работе
+     */
+    @PostMapping("/changePassword")
+    public ResponseEntity<ResponseBody> changeUserPassword(@RequestBody ValueInfo requestBody, HttpSession session) {
+        // ToDo: валидация
+        if (true) {
+            Object id = session.getAttribute(USER_ID);
+            if (id instanceof Long) {
+                accountService.changePassword((Long) id, requestBody.getValue());
+                return Response.ok("Login changed");
+            } else {
+                return Response.invalidSession();
+            }
+        } else {
+            return Response.badValidator();
+        }
     }
 
     /**
@@ -130,7 +142,6 @@ public class UserController {
             return Response.invalidSession();
         }
 
-        // ToDO: пользователя же надо разлогинить?
         session.invalidate();
         return Response.ok("User deleted");
     }

@@ -16,8 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class AccountService {
 
-    private PasswordEncoder encoder;
-    private final Map<String, User> loginToUser = new ConcurrentHashMap<>();
+    private final PasswordEncoder encoder;
     private final Map<Long, User> idToUser = new ConcurrentHashMap<>();
     private final AtomicLong counter = new AtomicLong();
 
@@ -25,69 +24,54 @@ public class AccountService {
         this.encoder = encoder;
     }
 
-
-    /**
-     * Изменеие данных пользователя по id (Логин тоже можно изменить)
-     * @param id идентификатор пользователя
-     * @param newUserData объект из тела запроса на изменение
-     * @return true, если операция прошла успеша. false если нет.
-     */
-    public boolean changeUserById(@NotNull Long id, @NotNull UserCreationInfo newUserData) {
-        if (idToUser.containsKey(id)) {
-            final String login = newUserData.getLogin();
-            if (!loginToUser.containsKey(login)) {
-                final User user = idToUser.get(id);
-                final User changedUser = new User(id, login, newUserData.getEmail(),
-                        encoder.encode(newUserData.getPassword()), user.getCreatedAt(), LocalDateTime.now());
-
-                idToUser.remove(id);
-                loginToUser.remove(user.getLogin());
-
-                idToUser.put(id, changedUser);
-                loginToUser.put(login, changedUser);
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
     /**
      * Создание пользователя
      * @param userData объект UserCreationInfo тела запроса
-     * @return true если опреация прошла успешна, иначе false
      */
-    public boolean createUser(@NotNull UserCreationInfo userData) {
-        final String login = userData.getLogin();
-        if (!loginToUser.containsKey(login)) {
-            final String encodedPassword = encoder.encode(userData.getPassword());
-            final User newUser = new User(counter.incrementAndGet(),
-                    login, userData.getEmail(), encodedPassword, LocalDateTime.now(), LocalDateTime.now());
-
-            loginToUser.put(login, newUser);
+    public void createUser(@NotNull UserCreationInfo userData) {
+        final String encodedPassword = encoder.encode(userData.getPassword());
+        final User newUser = new User(counter.incrementAndGet(),
+                    userData.getLogin(), userData.getEmail(), encodedPassword, LocalDateTime.now(), LocalDateTime.now());
             idToUser.put(newUser.getId(), newUser);
-            return true;
-        }
-
-        return false;
     }
 
+    /**
+     * Изменить email пользователя
+     * @param id идентификатор
+     * @param email почта
+     */
+    public void changeEmail(@NotNull Long id,@NotNull String email) {
+        final User user = idToUser.get(id);
+        final User changedUser = new User(id, user.getLogin(), email, user.getPassword(),
+                user.getCreatedAt(), LocalDateTime.now());
+
+        idToUser.replace(id, changedUser);
+    }
 
     /**
-     * Удалить пользователя по логину
-     * @param login логин
-     * @return true если опреация прошла успешна, иначе false
+     * Изменить логин пользователя
+     * @param id идентификатор пользователя
+     * @param login новый логин
      */
-    public boolean deleteUserbyLogin(@NotNull String login) {
-        final User user = loginToUser.get(login);
-        if (user != null) {
-            loginToUser.remove(login);
-            idToUser.remove(user.getId());
-            return true;
-        }
-        return false;
+    public void changeLogin(@NotNull Long id,@NotNull String login) {
+        final User user = idToUser.get(id);
+        final User changedUser = new User(id, login, user.getEmail(), user.getPassword(),
+                user.getCreatedAt(), LocalDateTime.now());
+
+        idToUser.replace(id, changedUser);
+    }
+
+    /**
+     * Изменить пароль
+     * @param id идентификатор пользователя
+     * @param password новый пароль
+     */
+    public void changePassword(@NotNull Long id,@NotNull String password) {
+        final User user = idToUser.get(id);
+        final User changedUser = new User(id, user.getLogin(), user.getEmail(), encoder.encode(password),
+                user.getCreatedAt(), LocalDateTime.now());
+
+        idToUser.replace(id, changedUser);
     }
 
     /**
@@ -98,7 +82,6 @@ public class AccountService {
     public boolean deleteUserbyId(@NotNull Long id) {
         final User user = idToUser.get(id);
         if (user != null) {
-            loginToUser.remove(user.getLogin());
             idToUser.remove(id);
             return true;
         }
@@ -114,7 +97,7 @@ public class AccountService {
      */
     @Nullable
     public User authenticateUser(@NotNull String login, @NotNull String password) {
-        final User user = loginToUser.get(login);
+        final User user = getUserByLogin(login);
         if (user != null) {
             if (encoder.matches(password, user.getPassword())) {
                 return user;
@@ -131,7 +114,12 @@ public class AccountService {
      */
     @Nullable
     public User getUserByLogin(@NotNull String login) {
-        return loginToUser.get(login);
+        for (User user: idToUser.values()) {
+            if (user.getLogin().equals(login)) {
+                return user;
+            }
+        }
+        return null;
     }
 
 
@@ -145,4 +133,31 @@ public class AccountService {
         return idToUser.get(id);
     }
 
+    /**
+     * Проверить существует ли пользователь, login уникален
+     * @param email емайл пользователя
+     * @return true если пользователь с таким емайлом существует, иначе false
+     */
+    public boolean hasEmail(@NotNull String email){
+        for (User user : idToUser.values()) {
+            if (user.getEmail().equals(email)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Проверить существует ли пользователь, login уникален
+     * @param login логин пользователя
+     * @return true если пользователь с таким логином существует, иначе false
+     */
+    public boolean hasLogin(@NotNull String login){
+        for (User user : idToUser.values()) {
+            if (user.getLogin().equals(login)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
