@@ -1,4 +1,4 @@
-package api.utils;
+package api.utils.response;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +10,7 @@ public class UserResponseBody extends LoginResponseBody {
     public final String email;
     public final LocalDateTime createdAt;
     public final LocalDateTime updatedAt;
+
 
     public UserResponseBody(int status, String login, String email,
                             LocalDateTime createdAt, LocalDateTime updatedAt,  String msg) {
