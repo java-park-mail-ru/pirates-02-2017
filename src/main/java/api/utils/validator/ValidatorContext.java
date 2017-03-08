@@ -1,8 +1,5 @@
 package api.utils.validator;
 
-/**
- * Created by coon on 08.03.17.
- */
 
 import api.validators.PasswordValidator;
 import org.springframework.context.annotation.Bean;

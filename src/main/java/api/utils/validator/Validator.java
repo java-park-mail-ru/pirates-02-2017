@@ -1,11 +1,7 @@
 package api.utils.validator;
 
-import api.services.AccountService;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by coon on 08.03.17.
- */
 
 
 public abstract class Validator {

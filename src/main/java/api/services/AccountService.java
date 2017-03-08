@@ -16,8 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class AccountService {
 
-    private PasswordEncoder encoder;
-    private final Map<String, User> loginToUser = new ConcurrentHashMap<>();
+    private final PasswordEncoder encoder;
     private final Map<Long, User> idToUser = new ConcurrentHashMap<>();
     private final AtomicLong counter = new AtomicLong();
 
@@ -61,7 +60,8 @@ public class AccountService {
      */
     public boolean createUser(@NotNull UserCreationInfo userData) {
         final String login = userData.getLogin();
-        if (!loginToUser.containsKey(login)) {
+        final String email = userData.getEmail();
+        if (!idToUser.containsKey(login)) {
             final String encodedPassword = encoder.encode(userData.getPassword());
             final User newUser = new User(counter.incrementAndGet(),
                     login, userData.getEmail(), encodedPassword, LocalDateTime.now(), LocalDateTime.now());
@@ -144,5 +144,40 @@ public class AccountService {
     public User getUserById(@NotNull Long id) {
         return idToUser.get(id);
     }
+
+    public boolean hasEmail(@NotNull String email){
+        for (User user : idToUser.values()) {
+            if (user.getEmail().equals(email)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasLogin(@NotNull String login){
+        for (User user : idToUser.values()) {
+            if (user.getLogin().equals(login)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Проверить существует ли пользователь, email и login
+     * @param login
+     * @param email
+     * @return
+     */
+    public boolean isUserExists(@NotNull String login, @NotNull String email) {
+        for (User user : idToUser.values()) {
+            if (user.getLogin().equals(login) || user.getEmail().equals(email)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
 }
