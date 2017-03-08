@@ -20,8 +20,9 @@ public class PasswordValidator extends Validator {
     @NotNull
     public Iterable<ValidatorMessage> validate(@NotNull String value) {
         List<ValidatorMessage> messages = new ArrayList<>();
-
-        if (value.length() < 3 || value.length() > 30) {
+        final int min = 3;
+        final int max = 30;
+        if (value.length() < min || value.length() > max) {
             messages.add(
                     new ValidatorMessage(ValidatorStatus.ERROR,
                     "Password must be between 3 and 30 symbols"

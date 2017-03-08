@@ -9,44 +9,44 @@ import org.springframework.http.ResponseEntity;
 
 public class Response {
 
-    public static ResponseEntity<?> ok(@NotNull String msg) {
+    public static ResponseEntity<ResponseBody> ok(@NotNull String msg) {
         return ResponseEntity.ok(new ResponseBody(ErrorCodes.SUCCESS, msg));
     }
 
-    public static ResponseEntity<?> okWithLogin(@NotNull String login, @NotNull String msg) {
+    public static ResponseEntity<ResponseBody> okWithLogin(@NotNull String login, @NotNull String msg) {
         return ResponseEntity.ok(new LoginResponseBody(ErrorCodes.SUCCESS, login, msg));
     }
 
-    public static ResponseEntity<?> okWithUser(@NotNull User user, @NotNull String msg) {
+    public static ResponseEntity<ResponseBody> okWithUser(@NotNull User user, @NotNull String msg) {
         return ResponseEntity.ok(new UserResponseBody(ErrorCodes.SUCCESS, user.getLogin(), user.getEmail(),
                 user.getCreatedAt(), user.getUpdatedAt(), msg));
     }
 
-    public static ResponseEntity<?> notFound(int status,@NotNull String msg) {
+    public static ResponseEntity<ResponseBody> notFound(int status,@NotNull String msg) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseBody(status, msg));
     }
 
-    public static ResponseEntity<?> badRequest(int status,@NotNull String msg) {
+    public static ResponseEntity<ResponseBody> badRequest(int status,@NotNull String msg) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseBody(status, msg));
     }
 
-    public static ResponseEntity<?> userNotFound() {
+    public static ResponseEntity<ResponseBody> userNotFound() {
         return Response.notFound(ErrorCodes.USER_NOT_FOUND, "User not found");
     }
 
-    public static ResponseEntity<?> userAlreadyExists() {
+    public static ResponseEntity<ResponseBody> userAlreadyExists() {
         return Response.badRequest(ErrorCodes.USER_ALREADY_EXISTS, "User already exists");
     }
 
-    public static ResponseEntity<?> invalidSession() {
+    public static ResponseEntity<ResponseBody> invalidSession() {
         return Response.badRequest(ErrorCodes.SESSION_INVALID, "Invalid session");
     }
 
-    public static ResponseEntity<?> badLoginOrPassword() {
+    public static ResponseEntity<ResponseBody> badLoginOrPassword() {
         return Response.badRequest(ErrorCodes.BAD_LOGIN_OR_PASSWORD, "Bad login or password");
     }
 
-    public static ResponseEntity<?> badValidator() {
+    public static ResponseEntity<ResponseBody> badValidator() {
         return Response.badRequest(ErrorCodes.BAD_VALIDATOR, "Bad validator");
     }
 

@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class AccountService {
 
-    private PasswordEncoder encoder;
+    private final PasswordEncoder encoder;
     private final Map<String, User> loginToUser = new ConcurrentHashMap<>();
     private final Map<Long, User> idToUser = new ConcurrentHashMap<>();
     private final AtomicLong counter = new AtomicLong();
