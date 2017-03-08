@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 /**
  * Created by coon on 08.03.17.
@@ -32,9 +33,15 @@ public class ValidatorController {
      */
     @PostMapping("/{name}")
     public ResponseEntity<?> getUserById(@PathVariable String name, @RequestBody ValidationInfo validation) {
-        Object validator = this.appContext.getBean(name + "Validator");
+        final Object validator;
 
-        if (!(validator instanceof Validator) || (name == null)) {
+        try {
+            validator = this.appContext.getBean(name + "Validator");
+
+            if (!(validator instanceof Validator)) {
+                throw new NoSuchBeanDefinitionException(name + "Validator");
+            }
+        } catch (NoSuchBeanDefinitionException e) {
             return Response.badValidator();
         }
 
