@@ -10,9 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
-/**
- * Created by coon on 08.03.17.
- */
 
 @RestController
 @RequestMapping(path = "/validator")
