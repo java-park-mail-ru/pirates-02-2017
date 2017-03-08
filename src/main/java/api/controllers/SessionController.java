@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
-        "http://localhost", "http://127.0.0.1"})
+        "http://localhost:3000", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/session")
 public class SessionController {
