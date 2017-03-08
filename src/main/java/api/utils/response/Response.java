@@ -45,4 +45,9 @@ public class Response {
     public static ResponseEntity<?> badLoginOrPassword() {
         return Response.badRequest(ErrorCodes.BAD_LOGIN_OR_PASSWORD, "Bad login or password");
     }
+
+    public static ResponseEntity<?> badValidator() {
+        return Response.badRequest(ErrorCodes.BAD_VALIDATOR, "Bad validator");
+    }
+
 }

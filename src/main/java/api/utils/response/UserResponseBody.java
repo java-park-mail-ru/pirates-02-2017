@@ -11,6 +11,7 @@ public class UserResponseBody extends LoginResponseBody {
     public final LocalDateTime createdAt;
     public final LocalDateTime updatedAt;
 
+
     public UserResponseBody(int status, String login, String email,
                             LocalDateTime createdAt, LocalDateTime updatedAt,  String msg) {
         super(status, msg, login);

@@ -1,13 +1,13 @@
 package api.controllers;
 
+import api.utils.info.ValidationInfo;
+import api.utils.response.Response;
 import api.utils.validator.Validator;
+import api.utils.validator.ValidatorMessage;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by coon on 08.03.17.
@@ -31,9 +31,15 @@ public class ValidatorController {
      * @return json с результатом работы валидатора
      */
     @PostMapping("/{name}")
-    public ResponseEntity<?> getUserById(@NotNull @PathVariable String name) {
-        Validator validator = (Validator) this.appContext.getBean(name + "Validator");
-        return null;
+    public ResponseEntity<?> getUserById(@PathVariable String name, @RequestBody ValidationInfo validation) {
+        Object validator = this.appContext.getBean(name + "Validator");
+
+        if (!(validator instanceof Validator) || (name == null)) {
+            return Response.badValidator();
+        }
+
+        Iterable<ValidatorMessage> messages = ((Validator) validator).validate(validation.getValue());
+        return ResponseEntity.ok(messages);
     }
 
 }
