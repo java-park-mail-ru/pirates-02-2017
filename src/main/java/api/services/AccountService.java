@@ -1,7 +1,7 @@
 package api.services;
 
 import api.model.User;
-import api.utils.UserCreationInfo;
+import api.utils.info.UserCreationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,4 +1,4 @@
-package api.utils;
+package api.utils.info;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
