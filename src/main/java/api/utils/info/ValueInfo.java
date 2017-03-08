@@ -9,11 +9,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-public class ValidationInfo {
+public class ValueInfo {
     private final String value;
 
     @JsonCreator
-    ValidationInfo(
+    ValueInfo(
             @JsonProperty(value = "value", required = true) String value
     ) {
         this.value = value;
