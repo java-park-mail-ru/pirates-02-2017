@@ -2,9 +2,9 @@ package api.controllers;
 
 import api.model.User;
 import api.services.AccountService;
-import api.utils.UserCreationInfo;
-import api.utils.UserLoginInfo;
-import api.utils.Response;
+import api.utils.info.UserCreationInfo;
+import api.utils.info.UserLoginInfo;
+import api.utils.response.Response;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package api.utils;
+package api.utils.response;
 
 import java.time.LocalDateTime;
 

@@ -2,11 +2,9 @@ package api.controllers;
 
 import api.model.User;
 import api.services.AccountService;
-import api.utils.ErrorCodes;
-import api.utils.Response;
-import api.utils.UserAuthInfo;
+import api.utils.response.Response;
+import api.utils.info.UserAuthInfo;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;

@@ -1,7 +1,8 @@
-package api.utils;
+package api.utils.response;
 
 
 import api.model.User;
+import api.utils.ErrorCodes;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

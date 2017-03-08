@@ -1,4 +1,4 @@
-package api.utils;
+package api.utils.response;
 
 /**
  * Тело запроса с полем Логина
