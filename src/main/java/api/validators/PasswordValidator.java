@@ -40,6 +40,7 @@ public class PasswordValidator extends Validator {
         //}
 
         return messages;
+
     }
 
 }
