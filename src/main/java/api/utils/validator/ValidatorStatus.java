@@ -5,6 +5,11 @@ package api.utils.validator;
  */
 
 
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+
+@JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum ValidatorStatus {
     ERROR("error"),
     WARNING("warning"),
@@ -15,18 +20,17 @@ public enum ValidatorStatus {
     private final String text;
 
 
-    /**
-     * @param text
-     */
     private ValidatorStatus(final String text) {
         this.text = text;
     }
 
-    /**
-     * @see java.lang.Enum#toString()
-     */
     @Override
     public String toString() {
+        return text;
+    }
+
+    @JsonValue
+    public String getValue() {
         return text;
     }
 }

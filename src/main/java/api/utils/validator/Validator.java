@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 
-public interface Validator {
+public abstract class Validator {
 
     /**
      * Валидация данных
@@ -16,6 +16,20 @@ public interface Validator {
      * @return Iterable<ValidatorMessage> в любом случае.
      */
     @NotNull
-    public Iterable<ValidatorMessage> validate(@NotNull String value);
+    public abstract Iterable<ValidatorMessage> validate(@NotNull String value);
+
+
+    public boolean isValid(@NotNull String value, boolean strict) {
+        Iterable<ValidatorMessage> messages = this.validate(value);
+
+        for (ValidatorMessage message: messages) {
+            if ((message.status == ValidatorStatus.ERROR) ||
+                    (strict && message.status == ValidatorStatus.WARNING)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 }
