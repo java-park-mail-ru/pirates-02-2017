@@ -5,18 +5,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserAuthInfo {
-    private final String login;
+    private final String loginOrEmail;
     private final String password;
 
     @JsonCreator
     UserAuthInfo(
-            @JsonProperty(value = "login_or_email", required = true) String login,
+            @JsonProperty(value = "login_or_email", required = true) String loginOrEmail,
             @JsonProperty(value = "password", required = true) String password
     ) {
-        this.login = login;
+        this.loginOrEmail = loginOrEmail;
         this.password = password;
     }
 
-    public String getLogin() { return login; }
+    public String getLoginOrEmail() { return loginOrEmail; }
     public String getPassword() { return password; }
 }
