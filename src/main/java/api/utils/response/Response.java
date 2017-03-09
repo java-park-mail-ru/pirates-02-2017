@@ -7,6 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.ZoneOffset;
+import java.time.temporal.TemporalField;
+
 public class Response {
 
     public static ResponseEntity<? extends ResponseBody> ok(@NotNull String msg) {
@@ -19,7 +22,7 @@ public class Response {
 
     public static ResponseEntity<? extends ResponseBody> okWithUser(@NotNull User user, @NotNull String msg) {
         return ResponseEntity.ok(new UserResponseBody(ErrorCodes.SUCCESS, user.getLogin(), user.getEmail(),
-                user.getCreatedAt(), user.getUpdatedAt(), msg));
+                user.getCreatedAt().toEpochSecond(ZoneOffset.UTC), user.getUpdatedAt().toEpochSecond(ZoneOffset.UTC), msg));
     }
 
     public static ResponseEntity<? extends ResponseBody> notFound(int status,@NotNull String msg) {

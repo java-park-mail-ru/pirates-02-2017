@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 public class UserResponseBody extends LoginResponseBody {
 
     public final String email;
-    public final LocalDateTime createdAt;
-    public final LocalDateTime updatedAt;
+    public final Long createdAt;
+    public final Long updatedAt;
 
 
     public UserResponseBody(int status, String login, String email,
-                            LocalDateTime createdAt, LocalDateTime updatedAt,  String msg) {
+                            Long createdAt, Long updatedAt,  String msg) {
         super(status, msg, login);
         this.email = email;
         this.createdAt = createdAt;
