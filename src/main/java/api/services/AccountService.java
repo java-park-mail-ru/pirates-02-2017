@@ -91,18 +91,34 @@ public class AccountService {
 
     /**
      * Аутентификация пользователя
-     * @param login логин
+     * @param value логин или email
      * @param password пароль
      * @return объект <code>User</code> если операция прошла успешно, иначе null
      */
     @Nullable
-    public User authenticateUser(@NotNull String login, @NotNull String password) {
-        final User user = getUserByLogin(login);
+    public User authenticateUser(@NotNull String value, @NotNull String password) {
+        final User user = getUserByLoginOrEmail(value);
         if (user != null) {
             if (encoder.matches(password, user.getPassword())) {
                 return user;
             }
         }
+        return null;
+    }
+
+    /**
+     * Найти пользователя по логину или email
+     * @param value логин или email
+     * @return Объект User если пользователь существует, иначе null
+     */
+    @Nullable
+    public User getUserByLoginOrEmail(@NotNull String value) {
+        for (User user : idToUser.values()) {
+            if (value.equals(user.getLogin()) || value.equals(user.getEmail())) {
+                return user;
+            }
+        }
+
         return null;
     }
 
