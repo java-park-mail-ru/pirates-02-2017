@@ -1,6 +1,7 @@
 package api.utils.info;
 
 
+import api.utils.validator.FieldValidates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,9 +18,7 @@ public class UserAuthInfo {
     }
 
     public String getLoginOrEmail() { return loginOrEmail; }
+
     public String getPassword() { return password; }
 
-    public Boolean getVk() {
-        return false;
-    }
 }
