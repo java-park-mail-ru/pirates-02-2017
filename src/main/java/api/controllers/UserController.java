@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 import static api.controllers.SessionController.USER_ID;
-import static api.controllers.SessionController.USER_LOGIN;
 
 @CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
         "http://localhost:3000", "http://127.0.0.1:3000"})
@@ -132,7 +131,7 @@ public class UserController {
     @PostMapping("/delete")
     public ResponseEntity<?> deleteUser(HttpSession session) {
 
-        final Object id = session.getAttribute(USER_LOGIN);
+        final Object id = session.getAttribute(USER_ID);
 
         if (id instanceof Long) {
             if (!accountService.deleteUserbyId((Long) id)) {
