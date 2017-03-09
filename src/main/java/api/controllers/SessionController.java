@@ -20,14 +20,11 @@ public class SessionController {
     @NotNull
     private final AccountService accountService;
 
-    @NotNull
-    private final ApplicationContext appContext;
 
     public static final String USER_ID = "USER_ID";
 
-    public SessionController(@NotNull AccountService accountService, @NotNull ApplicationContext appContext) {
+    public SessionController(@NotNull AccountService accountService) {
         this.accountService = accountService;
-        this.appContext = appContext;
     }
 
 

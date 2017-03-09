@@ -22,16 +22,15 @@ public final class ValidatorChain {
                 continue;
             }
 
-            FieldValidates validates = getter.getAnnotation(FieldValidates.class);
+            final FieldValidates validates = getter.getAnnotation(FieldValidates.class);
 
             for (String name: validates.validators()) {
 
-                if (name.length() == 0) {
+                if (name.isEmpty()) {
                     continue;
                 }
 
-                Validator validator = (Validator) appContext.getBean(name + "Validator");
-                String key = validates.name();
+                final Validator validator = (Validator) appContext.getBean(name + "Validator");
                 Object value = "";
 
                 try {

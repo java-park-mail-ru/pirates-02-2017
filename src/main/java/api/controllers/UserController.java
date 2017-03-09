@@ -2,9 +2,7 @@ package api.controllers;
 
 import api.model.User;
 import api.services.AccountService;
-import api.utils.info.UserCreationInfo;
-import api.utils.info.UserIdInfo;
-import api.utils.info.ValueInfo;
+import api.utils.info.*;
 import api.utils.response.*;
 import api.utils.response.ResponseBody;
 import api.utils.validator.ValidatorChain;
@@ -73,9 +71,8 @@ public class UserController {
      * @return json с результатом работы
      */
     @PostMapping("/changeLogin")
-    public ResponseEntity<ResponseBody> changeUserLogin(@RequestBody ValueInfo requestBody, HttpSession session) {
-        // ToDo: валидация
-        if (true) {
+    public ResponseEntity<ResponseBody> changeUserLogin(@RequestBody UserLoginInfo requestBody, HttpSession session) {
+        if (ValidatorChain.isValid(requestBody, false, appContext)) {
             Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
                 accountService.changeLogin((Long) id, requestBody.getValue());
@@ -95,9 +92,8 @@ public class UserController {
      * @return json сообщение об исходи операции
      */
     @PostMapping("/changeEmail")
-    public ResponseEntity<ResponseBody> changeUserEmail(@RequestBody ValueInfo requestBody, HttpSession session) {
-        // ToDo: валидация
-        if (true) {
+    public ResponseEntity<ResponseBody> changeUserEmail(@RequestBody UserEmailInfo requestBody, HttpSession session) {
+        if (ValidatorChain.isValid(requestBody, false, appContext)) {
             Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
                 accountService.changeEmail((Long) id, requestBody.getValue());
@@ -118,8 +114,7 @@ public class UserController {
      */
     @PostMapping("/changePassword")
     public ResponseEntity<ResponseBody> changeUserPassword(@RequestBody ValueInfo requestBody, HttpSession session) {
-        // ToDo: валидация
-        if (true) {
+        if (ValidatorChain.isValid(requestBody, false, appContext)) {
             Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
                 accountService.changePassword((Long) id, requestBody.getValue());
