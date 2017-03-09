@@ -14,7 +14,7 @@ public class UserResponseBody extends LoginResponseBody {
 
     public UserResponseBody(int status, String login, String email,
                             Long createdAt, Long updatedAt,  String msg) {
-        super(status, msg, login);
+        super(status, login, msg);
         this.email = email;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
