@@ -7,7 +7,9 @@ import api.utils.info.UserIdInfo;
 import api.utils.info.ValueInfo;
 import api.utils.response.*;
 import api.utils.response.ResponseBody;
+import api.utils.validator.ValidatorChain;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
@@ -15,7 +17,7 @@ import javax.servlet.http.HttpSession;
 import static api.controllers.SessionController.USER_ID;
 
 @CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
-        "http://localhost:3000", "http://127.0.0.1:3000"})
+        "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/user")
 public class UserController {
@@ -23,8 +25,12 @@ public class UserController {
     @NotNull
     private final AccountService accountService;
 
-    public UserController(@NotNull AccountService accountService) {
+    @NotNull
+    private final ApplicationContext appContext;
+
+    public UserController(@NotNull AccountService accountService, @NotNull ApplicationContext appContext) {
         this.accountService = accountService;
+        this.appContext = appContext;
     }
 
 
@@ -50,12 +56,14 @@ public class UserController {
      */
     @PostMapping("/create")
     public ResponseEntity<ResponseBody> createUser(@RequestBody UserCreationInfo requestBody) {
-//  ToDo: сделать валидацию полеть в контроллере создания пользователя
-        if (true) {
-            accountService.createUser(requestBody);
-            return Response.ok("User created");
+
+        if (!ValidatorChain.isValid(requestBody, false, this.appContext)) {
+            return Response.badValidator();
         }
-        return Response.userAlreadyExists();
+
+        accountService.createUser(requestBody);
+        return Response.ok("User created");
+        //return Response.userAlreadyExists();
     }
 
     /**
