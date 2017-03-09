@@ -22,7 +22,7 @@ public class LoginValidator extends Validator {
     @NotNull
     @Override
     public Iterable<ValidatorMessage> validate(@NotNull String value) {
-        ArrayList<ValidatorMessage> messages = new ArrayList<>();
+        final ArrayList<ValidatorMessage> messages = new ArrayList<>();
 
         if ((value.length() < 3) || (value.length() > 30)) {
             messages.add(new ValidatorMessage(ValidatorStatus.ERROR,
