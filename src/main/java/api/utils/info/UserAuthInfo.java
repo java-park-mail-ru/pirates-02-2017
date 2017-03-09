@@ -10,7 +10,7 @@ public class UserAuthInfo {
 
     @JsonCreator
     UserAuthInfo(
-            @JsonProperty(value = "login", required = true) String login,
+            @JsonProperty(value = "login_or_email", required = true) String login,
             @JsonProperty(value = "password", required = true) String password
     ) {
         this.login = login;

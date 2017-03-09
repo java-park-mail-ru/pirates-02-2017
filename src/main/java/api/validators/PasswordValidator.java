@@ -25,11 +25,13 @@ public class PasswordValidator extends Validator {
         List<ValidatorMessage> messages = new ArrayList<>();
         final int min = 3;
         final int max = 30;
+
         if (value.length() < min || value.length() > max) {
             messages.add(
                     new ValidatorMessage(ValidatorStatus.ERROR,
                     "Пароль должен быть от 3 до 30 символов длиной."
                     ));
+            return messages;
         };
 
         //if (value.co)
