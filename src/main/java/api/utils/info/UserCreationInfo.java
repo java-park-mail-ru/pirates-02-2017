@@ -1,5 +1,6 @@
 package api.utils.info;
 
+import api.utils.validator.FieldValidates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,7 +23,12 @@ public final class UserCreationInfo {
         this.password = password;
     }
 
+    @FieldValidates(name = "login", validators = {"login"})
     public String getLogin() { return login; }
+
+    @FieldValidates(name = "email")
     public String getEmail() { return email; }
+
+    @FieldValidates(name = "password", validators = {"password"})
     public String getPassword() { return password; }
 }
