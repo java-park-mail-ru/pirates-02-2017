@@ -23,11 +23,11 @@ public class Response {
     }
 
     public static ResponseEntity<ResponseBody> notFound(int status,@NotNull String msg) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseBody(status, msg));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseBody(status, msg));
     }
 
     public static ResponseEntity<ResponseBody> badRequest(int status,@NotNull String msg) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseBody(status, msg));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseBody(status, msg));
     }
 
     public static ResponseEntity<ResponseBody> userNotFound() {

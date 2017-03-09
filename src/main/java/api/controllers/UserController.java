@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 import static api.controllers.SessionController.USER_ID;
 
 @CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
-        "http://localhost", "http://127.0.0.1"})
+        "http://localhost:3000", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/user")
 public class UserController {
