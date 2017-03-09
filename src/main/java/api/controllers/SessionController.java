@@ -2,8 +2,9 @@ package api.controllers;
 
 import api.model.User;
 import api.services.AccountService;
-import api.utils.response.Response;
+import api.utils.response.*;
 import api.utils.info.UserAuthInfo;
+import api.utils.response.ResponseBody;
 import api.utils.validator.ValidatorChain;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
@@ -36,7 +37,7 @@ public class SessionController {
      */
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserAuthInfo requestBody, HttpSession session) {
+    public ResponseEntity<? extends ResponseBody> loginUser(@RequestBody UserAuthInfo requestBody, HttpSession session) {
 
         final User user = accountService.authenticateUser(requestBody.getLoginOrEmail(), requestBody.getPassword());
         if (user == null) {
@@ -54,7 +55,7 @@ public class SessionController {
      * @return json ответ если OK, иначе <code>HTTP</code> код соответсвующей ошибки
      */
     @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser(HttpSession session) {
+    public ResponseEntity<? extends ResponseBody> logoutUser(HttpSession session) {
         session.invalidate();
         return Response.ok("User deleted");
     }
@@ -65,7 +66,7 @@ public class SessionController {
      * @return json <code>User</code>
      */
     @GetMapping("/current")
-    public ResponseEntity<?> getLoggedUser(HttpSession session) {
+    public ResponseEntity<? extends ResponseBody> getLoggedUser(HttpSession session) {
 
         final User currentUser;
         final Object id = session.getAttribute(USER_ID);

@@ -38,7 +38,7 @@ public class UserController {
      * @return json с сериализованным <code>User</code> объектом
      */
     @PostMapping("/getById")
-    public ResponseEntity<?> getUserById(@RequestBody UserIdInfo requestBody) {
+    public ResponseEntity<? extends ResponseBody> getUserById(@RequestBody UserIdInfo requestBody) {
         final User user = accountService.getUserById(requestBody.getId());
         if (user == null) {
             return Response.userNotFound();
@@ -53,7 +53,7 @@ public class UserController {
      * @return json сообщение об исходе операции
      */
     @PostMapping("/create")
-    public ResponseEntity<ResponseBody> createUser(@RequestBody UserCreationInfo requestBody) {
+    public ResponseEntity<? extends ResponseBody> createUser(@RequestBody UserCreationInfo requestBody) {
 
         if (!ValidatorChain.isValid(requestBody, false, this.appContext)) {
             return Response.badValidator();
@@ -71,7 +71,7 @@ public class UserController {
      * @return json с результатом работы
      */
     @PostMapping("/changeLogin")
-    public ResponseEntity<ResponseBody> changeUserLogin(@RequestBody UserLoginInfo requestBody, HttpSession session) {
+    public ResponseEntity<? extends ResponseBody> changeUserLogin(@RequestBody UserLoginInfo requestBody, HttpSession session) {
         if (ValidatorChain.isValid(requestBody, false, appContext)) {
             Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
@@ -92,7 +92,7 @@ public class UserController {
      * @return json сообщение об исходи операции
      */
     @PostMapping("/changeEmail")
-    public ResponseEntity<ResponseBody> changeUserEmail(@RequestBody UserEmailInfo requestBody, HttpSession session) {
+    public ResponseEntity<? extends ResponseBody> changeUserEmail(@RequestBody UserEmailInfo requestBody, HttpSession session) {
         if (ValidatorChain.isValid(requestBody, false, appContext)) {
             Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
@@ -113,7 +113,7 @@ public class UserController {
      * @return json сообщение о работе
      */
     @PostMapping("/changePassword")
-    public ResponseEntity<ResponseBody> changeUserPassword(@RequestBody ValueInfo requestBody, HttpSession session) {
+    public ResponseEntity<? extends ResponseBody> changeUserPassword(@RequestBody ValueInfo requestBody, HttpSession session) {
         if (ValidatorChain.isValid(requestBody, false, appContext)) {
             Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
@@ -133,7 +133,7 @@ public class UserController {
      * @return json сообщение об исходе операции
      */
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteUser(HttpSession session) {
+    public ResponseEntity<? extends ResponseBody> deleteUser(HttpSession session) {
 
         final Object id = session.getAttribute(USER_ID);
 
