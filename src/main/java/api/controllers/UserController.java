@@ -52,6 +52,7 @@ public class UserController {
     public ResponseEntity<ResponseBody> createUser(@RequestBody UserCreationInfo requestBody) {
 //  ToDo: сделать валидацию полеть в контроллере создания пользователя
         if (true) {
+            accountService.createUser(requestBody);
             return Response.ok("User created");
         }
         return Response.userAlreadyExists();

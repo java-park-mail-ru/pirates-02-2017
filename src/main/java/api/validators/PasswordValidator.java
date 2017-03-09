@@ -11,10 +11,6 @@ import java.util.regex.Pattern;
 
 //import org.springframework.context.annotation.Bean;
 
-/**
- * Created by coon on 08.03.17.
- */
-
 public class PasswordValidator extends Validator {
 
     Pattern pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$");
@@ -22,7 +18,7 @@ public class PasswordValidator extends Validator {
     @Override
     @NotNull
     public Iterable<ValidatorMessage> validate(@NotNull String value) {
-        List<ValidatorMessage> messages = new ArrayList<>();
+        final List<ValidatorMessage> messages = new ArrayList<>();
         final int min = 3;
         final int max = 30;
 

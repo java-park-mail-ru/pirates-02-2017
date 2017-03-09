@@ -43,7 +43,7 @@ public class ValidatorController {
             return Response.badValidator();
         }
 
-        Iterable<ValidatorMessage> messages = ((Validator) validator).validate(validation.getValue());
+        final Iterable<ValidatorMessage> messages = ((Validator) validator).validate(validation.getValue());
         return ResponseEntity.ok(messages);
     }
 
