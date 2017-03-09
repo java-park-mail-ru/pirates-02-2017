@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 
-public class LoginValidator extends Validator {
+public class EmailValidator extends Validator {
 
     private final AccountService accountService;
 
-    public LoginValidator(final AccountService accountService) {
+    public EmailValidator(final AccountService accountService) {
         this.accountService = accountService;
     }
 
@@ -26,19 +26,17 @@ public class LoginValidator extends Validator {
 
         if ((value.length() < 3) || (value.length() > 30)) {
             messages.add(new ValidatorMessage(ValidatorStatus.ERROR,
-                    "Логин должен быть от 3 до 30 символов длиной."));
+                    "Email должен быть от 3 до 30 символов длиной."));
             return messages;
         }
 
-        if (!value.matches("^[a-zA-Z0-9_]+$")) {
-            messages.add(new ValidatorMessage(ValidatorStatus.ERROR,
-                    "В логине можно использовать только заглавные и строчные латинские буквы (a-Z), " +
-                    "цифры (0-9) и символ '_'."));
+        if (!value.matches("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_.-]+\\.[a-zA-Z0-9_]+$")) {
+            messages.add(new ValidatorMessage(ValidatorStatus.ERROR, "Некорректный email!"));
             return messages;
         }
 
-        if (accountService.hasLogin(value)) {
-            messages.add(new ValidatorMessage(ValidatorStatus.ERROR, "Логин " + value +
+        if (accountService.hasEmail(value)) {
+            messages.add(new ValidatorMessage(ValidatorStatus.ERROR, "Email " + value +
                     " уже используется."));
             return messages;
         }
