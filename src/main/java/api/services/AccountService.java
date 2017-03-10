@@ -1,6 +1,7 @@
 package api.services;
 
 import api.model.User;
+import api.services.generic.AbstractAccountService;
 import api.utils.info.UserCreationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,15 +15,38 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 @Service
-public class AccountService {
+public class AccountService extends AbstractAccountService {
 
     private final PasswordEncoder encoder;
-    private final Map<Long, User> idToUser = new ConcurrentHashMap<>();
-    private final AtomicLong counter = new AtomicLong();
+
+    private Map<Long, User> idToUser = null;
+    private AtomicLong counter = null;
+
+    private final Map<Long, User> testIdToUser = new ConcurrentHashMap<>();
+    private final AtomicLong testCounter = new AtomicLong();
+
+    private final Map<Long, User> productionIdToUser = new ConcurrentHashMap<>();
+    private final AtomicLong productionCounter = new AtomicLong();
+
 
     AccountService (PasswordEncoder encoder) {
         this.encoder = encoder;
+        setProductionEnvironment();
     }
+
+
+    @Override
+    protected void setTestEnvironment() {
+        this.idToUser = this.testIdToUser;
+        this.counter = this.testCounter;
+    }
+
+    @Override
+    protected void setProductionEnvironment() {
+        this.idToUser = this.productionIdToUser;
+        this.counter = productionCounter;
+    }
+
 
     /**
      * Создание пользователя
@@ -175,5 +199,11 @@ public class AccountService {
             }
         }
         return false;
+    }
+
+
+    public void drop() {
+        this.idToUser.clear();
+        this.counter.set(0);
     }
 }

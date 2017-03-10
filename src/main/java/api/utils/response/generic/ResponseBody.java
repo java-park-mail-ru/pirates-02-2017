@@ -1,4 +1,4 @@
-package api.utils.response;
+package api.utils.response.generic;
 
 /**
  * Тело ответа

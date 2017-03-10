@@ -1,5 +1,7 @@
 package api.utils.response;
 
+import api.utils.response.generic.ResponseBody;
+
 /**
  * Тело запроса с полем Логина
  */

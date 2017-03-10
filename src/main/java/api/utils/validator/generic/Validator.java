@@ -1,5 +1,7 @@
-package api.utils.validator;
+package api.utils.validator.generic;
 
+import api.utils.validator.ValidatorMessage;
+import api.utils.validator.ValidatorStatus;
 import org.jetbrains.annotations.NotNull;
 
 

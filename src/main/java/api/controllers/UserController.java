@@ -1,10 +1,11 @@
 package api.controllers;
 
 import api.model.User;
-import api.services.AccountService;
+import api.services.generic.AbstractAccountService;
+import api.controllers.generic.ApplicationController;
 import api.utils.info.*;
 import api.utils.response.*;
-import api.utils.response.ResponseBody;
+import api.utils.response.generic.ResponseBody;
 import api.utils.validator.ValidatorChain;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
@@ -18,17 +19,11 @@ import static api.controllers.SessionController.USER_ID;
         "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/user")
-public class UserController {
+public final class UserController extends ApplicationController {
 
-    @NotNull
-    private final AccountService accountService;
-
-    @NotNull
-    private final ApplicationContext appContext;
-
-    public UserController(@NotNull AccountService accountService, @NotNull ApplicationContext appContext) {
-        this.accountService = accountService;
-        this.appContext = appContext;
+    public UserController(@NotNull AbstractAccountService accountService,
+                          @NotNull ApplicationContext appContext) {
+        super(accountService, appContext);
     }
 
 
@@ -71,7 +66,8 @@ public class UserController {
      * @return json с результатом работы
      */
     @PostMapping("/changeLogin")
-    public ResponseEntity<? extends ResponseBody> changeUserLogin(@RequestBody UserLoginInfo requestBody, HttpSession session) {
+    public ResponseEntity<? extends ResponseBody> changeUserLogin(@RequestBody UserLoginInfo requestBody,
+                                                                  HttpSession session) {
         if (ValidatorChain.isValid(requestBody, false, appContext)) {
             Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
@@ -92,7 +88,8 @@ public class UserController {
      * @return json сообщение об исходи операции
      */
     @PostMapping("/changeEmail")
-    public ResponseEntity<? extends ResponseBody> changeUserEmail(@RequestBody UserEmailInfo requestBody, HttpSession session) {
+    public ResponseEntity<? extends ResponseBody> changeUserEmail(@RequestBody UserEmailInfo requestBody,
+                                                                  HttpSession session) {
         if (ValidatorChain.isValid(requestBody, false, appContext)) {
             Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
@@ -113,7 +110,8 @@ public class UserController {
      * @return json сообщение о работе
      */
     @PostMapping("/changePassword")
-    public ResponseEntity<? extends ResponseBody> changeUserPassword(@RequestBody ValueInfo requestBody, HttpSession session) {
+    public ResponseEntity<? extends ResponseBody> changeUserPassword(@RequestBody UserPasswordInfo requestBody,
+                                                                     HttpSession session) {
         if (ValidatorChain.isValid(requestBody, false, appContext)) {
             Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {

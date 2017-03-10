@@ -1,5 +1,6 @@
 package api.utils.response;
 
+import api.utils.response.generic.ResponseBody;
 import api.utils.validator.ValidatorMessage;
 import org.jetbrains.annotations.NotNull;
 

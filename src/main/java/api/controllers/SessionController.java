@@ -1,11 +1,11 @@
 package api.controllers;
 
 import api.model.User;
-import api.services.AccountService;
+import api.services.generic.AbstractAccountService;
+import api.controllers.generic.ApplicationController;
 import api.utils.response.*;
 import api.utils.info.UserAuthInfo;
-import api.utils.response.ResponseBody;
-import api.utils.validator.ValidatorChain;
+import api.utils.response.generic.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +16,13 @@ import javax.servlet.http.HttpSession;
         "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/session")
-public class SessionController {
-
-    @NotNull
-    private final AccountService accountService;
-
+public class SessionController extends ApplicationController {
 
     public static final String USER_ID = "USER_ID";
 
-    public SessionController(@NotNull AccountService accountService) {
-        this.accountService = accountService;
+    public SessionController(@NotNull AbstractAccountService accountService,
+                             @NotNull ApplicationContext appContext) {
+        super(accountService, appContext);
     }
 
 

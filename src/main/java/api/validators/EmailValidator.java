@@ -2,7 +2,7 @@ package api.validators;
 
 
 import api.services.AccountService;
-import api.utils.validator.Validator;
+import api.utils.validator.generic.Validator;
 import api.utils.validator.ValidatorMessage;
 import api.utils.validator.ValidatorStatus;
 import org.jetbrains.annotations.NotNull;

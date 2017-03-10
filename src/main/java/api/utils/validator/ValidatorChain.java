@@ -1,16 +1,10 @@
 package api.utils.validator;
 
-import org.jetbrains.annotations.NotNull;
+import api.utils.validator.generic.Validator;
 import org.springframework.context.ApplicationContext;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Constructor;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public final class ValidatorChain {

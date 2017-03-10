@@ -2,6 +2,7 @@ package api.utils.response;
 
 
 import api.utils.ErrorCodes;
+import api.utils.response.generic.ResponseBody;
 
 import java.util.Map;
 

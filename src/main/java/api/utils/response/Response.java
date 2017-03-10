@@ -3,12 +3,12 @@ package api.utils.response;
 
 import api.model.User;
 import api.utils.ErrorCodes;
+import api.utils.response.generic.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.ZoneOffset;
-import java.time.temporal.TemporalField;
 
 public class Response {
 
