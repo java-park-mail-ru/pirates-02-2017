@@ -43,12 +43,12 @@ public class GameController {
         final String[] names = { "lol", "kek", "cheburek", "Valentin", "VaNilKA", "top", "kokos",
                                  "Pachome", "Sobaka", "Gennadiy", "Alconafter", "EvaPWNZ", "BanePWNZ"};
 
-        HashMap<String, Integer> scores = new HashMap<>();
+        final HashMap<String, Integer> scores = new HashMap<>();
         for (String name: names) {
             scores.put(name, ThreadLocalRandom.current().nextInt(0, 2000));
         }
 
-        Map<String, Integer> sorted = scores.entrySet()
+        final Map<String, Integer> sorted = scores.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
                 .collect(Collectors.toMap(
@@ -58,7 +58,7 @@ public class GameController {
                         LinkedHashMap::new
                 ));
 
-        List<Object> list = new ArrayList<Object>();
+        final List<Object> list = new ArrayList<>();
 
         for (String key: sorted.keySet()) {
             list.add(new Object() {
