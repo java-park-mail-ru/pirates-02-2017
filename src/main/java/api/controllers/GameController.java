@@ -38,7 +38,7 @@ public class GameController {
         ToDo: Add real scores, not the fake ones
      */
     @PostMapping("/scores")
-    public ResponseEntity<? extends ResponseBody> scores(HttpSession session) {
+    public ResponseEntity<?> scores(HttpSession session) {
 
         final String[] names = { "lol", "kek", "cheburek", "Valentin", "VaNilKA", "top", "kokos",
                                  "Pachome", "Sobaka", "Gennadiy", "Alconafter", "EvaPWNZ", "BanePWNZ"};
@@ -58,6 +58,15 @@ public class GameController {
                         LinkedHashMap::new
                 ));
 
-        return ResponseEntity.ok(new ScoresResponseBody(sorted));
+        List<Object> list = new ArrayList<Object>();
+
+        for (String key: sorted.keySet()) {
+            list.add(new Object() {
+                public final String login = key;
+                public final int score = sorted.get(key);
+            });
+        }
+
+        return ResponseEntity.ok(list);
     }
 }
