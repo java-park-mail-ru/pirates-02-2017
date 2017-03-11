@@ -1,0 +1,15 @@
+sudo: false
+language: java
+jdk:
+- oraclejdk8
+script:
+- mvn clean install spring-boot:repackage
+branches:
+  only:
+  - master
+deploy:
+  provider: heroku
+  app:
+    master: motion-project
+  api_key:
+    secure: gn8ZTvmRPILeYw0Rmg+lf4WbW1VAQZZJVlH1GgcSlScrNLZvdqmfMpm2bWZTrd0le0w7iEkBgCo17+7wZHyoKXNaQGutdyEopvsyQhpbYZNwu4L0oHdz8sWLry4Yl3QjvXTh73RucnTIS2ZNW+tqA2uerqV7QcRohGIwuNuLIrUK2P68EI7S1GMPXS6Zr4BYWtUN14sesxt+XiYDoe2IGzfWhVi8VLWG5bPku1Ap2J0Jx2vrP4gBqoJvmvBZSOQx3l1ltDkekLHOPd8dDEtZwRzx9zmAiyKO+PFMdAgLiGAQZZtl89sLe2Sq4viJA0cgEbwD7ZuhKnNhS36zFS0473aZcFVp3Tr5RsoCQ8GPsptPhGpRcgvmIRNzwCdr8rxqWiJRYsypJDjqcxnLrV/1tNM9Ym/BN3AcrAcmslj68qtD46ojaagUdEeUtYVsatzl4wYwGZeqYT1RZlAttF6/VkUFXFCv1Rgc47thqseMQmpzgmIBvmgvi1aSQ9CC8TKuYH15a/PxyKcm8CsmhApghQB1QIkUsbXbNYauEdLWT9hTylY4zC2+Odw684TVzEoVUuYbO2xZbe4r5rJuCVsVXufu8s5XdkWpShj9Zgr9Gup1O/oZfKaFFgtS7HN8ZULI/mFd6A+72yaMvqoghAKDxNHB1QhIxQQhRjEnAYS41kA=
