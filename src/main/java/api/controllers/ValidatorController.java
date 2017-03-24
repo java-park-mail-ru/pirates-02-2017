@@ -1,6 +1,7 @@
 package api.controllers;
 
-import api.services.generic.AbstractAccountService;
+import api.services.DbUserService;
+import api.services.generic.AbstractService;
 import api.controllers.generic.ApplicationController;
 import api.utils.info.ValueInfo;
 import api.utils.response.*;
@@ -16,11 +17,16 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
         "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/validator")
-public class ValidatorController extends ApplicationController {
+public class ValidatorController {
 
-    public ValidatorController(@NotNull AbstractAccountService accountService,
+    private final DbUserService accountService;
+    private final ApplicationContext appContext;
+
+    public ValidatorController(@NotNull DbUserService accountService,
                                @NotNull ApplicationContext appContext) {
-        super(accountService, appContext);
+
+        this.accountService = accountService;
+        this.appContext = appContext;
     }
 
 

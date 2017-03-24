@@ -1,4 +1,10 @@
 sudo: false
+services:
+  - postgresql
+before_script:
+  - psql -c "create user motion with password 'motion';" -U postgres
+  - psql -c "create database motion;" -U postgres
+  - psql -c "grant all on database motion to motion;" -U postgres
 language: java
 jdk:
 - oraclejdk8

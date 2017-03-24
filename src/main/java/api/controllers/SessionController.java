@@ -1,7 +1,8 @@
 package api.controllers;
 
 import api.model.User;
-import api.services.generic.AbstractAccountService;
+import api.services.DbUserService;
+import api.services.generic.AbstractService;
 import api.controllers.generic.ApplicationController;
 import api.utils.response.*;
 import api.utils.info.UserAuthInfo;
@@ -16,13 +17,16 @@ import javax.servlet.http.HttpSession;
         "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/session")
-public class SessionController extends ApplicationController {
+public class SessionController {
 
     public static final String USER_ID = "USER_ID";
+    private final DbUserService accountService;
+    private final ApplicationContext appContext;
 
-    public SessionController(@NotNull AbstractAccountService accountService,
+    public SessionController(@NotNull DbUserService accountService,
                              @NotNull ApplicationContext appContext) {
-        super(accountService, appContext);
+        this.accountService = accountService;
+        this.appContext = appContext;
     }
 
 

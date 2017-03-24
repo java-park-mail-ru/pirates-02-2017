@@ -1,7 +1,8 @@
 package api.controllers;
 
 import api.model.User;
-import api.services.generic.AbstractAccountService;
+import api.services.DbUserService;
+import api.services.generic.AbstractService;
 import api.controllers.generic.ApplicationController;
 import api.utils.info.*;
 import api.utils.response.*;
@@ -19,11 +20,15 @@ import static api.controllers.SessionController.USER_ID;
         "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/user")
-public final class UserController extends ApplicationController {
+public final class UserController {
 
-    public UserController(@NotNull AbstractAccountService accountService,
+    private final DbUserService accountService;
+    private final ApplicationContext appContext;
+
+    public UserController(@NotNull DbUserService accountService,
                           @NotNull ApplicationContext appContext) {
-        super(accountService, appContext);
+        this.accountService = accountService;
+        this.appContext = appContext;
     }
 
 
@@ -136,9 +141,7 @@ public final class UserController extends ApplicationController {
         final Object id = session.getAttribute(USER_ID);
 
         if (id instanceof Long) {
-            if (!accountService.deleteUserbyId((Long) id)) {
-                return Response.invalidSession();
-            }
+            accountService.deleteUserbyId((Long) id);
         } else {
             return Response.invalidSession();
         }

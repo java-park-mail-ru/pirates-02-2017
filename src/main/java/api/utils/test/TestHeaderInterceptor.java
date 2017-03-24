@@ -2,9 +2,8 @@ package api.utils.test;
 
 
 import api.Application;
-import api.services.generic.AbstractAccountService;
+import api.services.generic.AbstractService;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -14,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class TestHeaderInterceptor extends HandlerInterceptorAdapter {
+    // vileven: заменил public на final
+    private final AbstractService accountService;
 
-    public final AbstractAccountService accountService;
 
-
-    public TestHeaderInterceptor(@NotNull AbstractAccountService accountService) {
+    public TestHeaderInterceptor(@NotNull AbstractService accountService) {
         this.accountService = accountService;
     }
 

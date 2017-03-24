@@ -1,16 +1,16 @@
 package api.controllers.generic;
 
-import api.services.generic.AbstractAccountService;
+import api.services.generic.AbstractService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContext;
 
 
 public class ApplicationController {
 
-    protected final AbstractAccountService accountService;
+    protected final AbstractService accountService;
     protected final ApplicationContext appContext;
 
-    public ApplicationController(@NotNull AbstractAccountService accountService,
+    public ApplicationController(@NotNull AbstractService accountService,
                              @NotNull ApplicationContext appContext) {
         this.accountService = accountService;
         this.appContext = appContext;
