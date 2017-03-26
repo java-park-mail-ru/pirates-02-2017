@@ -4,6 +4,7 @@ import api.model.User;
 import api.services.DbUserService;
 import api.services.generic.AbstractService;
 import api.controllers.generic.ApplicationController;
+import api.services.generic.UserService;
 import api.utils.response.*;
 import api.utils.info.UserAuthInfo;
 import api.utils.response.generic.ResponseBody;
@@ -20,10 +21,10 @@ import javax.servlet.http.HttpSession;
 public class SessionController {
 
     public static final String USER_ID = "USER_ID";
-    private final DbUserService accountService;
+    private final UserService accountService;
     private final ApplicationContext appContext;
 
-    public SessionController(@NotNull DbUserService accountService,
+    public SessionController(@NotNull UserService accountService,
                              @NotNull ApplicationContext appContext) {
         this.accountService = accountService;
         this.appContext = appContext;

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,11 @@ import java.time.LocalDateTime;
  * Created by Vileven on 24.03.17.
  */
 @Service
-public class DbUserService extends AbstractService implements UserService {
+public class DbUserService implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public DbUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -30,32 +32,39 @@ public class DbUserService extends AbstractService implements UserService {
     }
 
     @Override
-    public void createUser(@NotNull UserCreationInfo userData) {
+    @Nullable
+    public User createUser(@NotNull UserCreationInfo userData) {
         User newUser = new User(userData.getLogin(), userData.getEmail(),
                 passwordEncoder.encode(userData.getPassword()), LocalDateTime.now(), LocalDateTime.now());
 
-        newUser = userRepository.save(newUser);
+        final User createdUser = userRepository.save(newUser);
         log.info("User created: {}", newUser.toString());
+        return createdUser;
     }
 
     @Override
     public void changeEmail(@NotNull Long id, @NotNull String email) {
-        final User updatedUser = userRepository.updateEmail(id, email, LocalDateTime.now());
-        log.info("User updated email: {}", updatedUser.toString());
+        final int res = userRepository.updateEmail(id, email, LocalDateTime.now());
+        if (res > 0) {
+            log.info("User updated email: {}", email);
+        }
     }
 
     @Override
     public void changeLogin(@NotNull Long id, @NotNull String login) {
-        final User updatedUser = userRepository.updateLogin(id, login, LocalDateTime.now());
-        log.info("User updated login: {}", updatedUser.toString());
+        final int res = userRepository.updateLogin(id, login, LocalDateTime.now());
+        if (res > 0) {
+            log.info("User updated login: {}", login);
+        }
     }
 
     @Override
     public void changePassword(@NotNull Long id, @NotNull String password) {
-        final User updatedUser = userRepository.updatePassword(id, passwordEncoder.encode(password),
+        final int res = userRepository.updatePassword(id, passwordEncoder.encode(password),
                 LocalDateTime.now());
-
-        log.info("User updated password: {}", updatedUser.toString());
+        if (res > 0) {
+            log.info("User updated password: {}", password);
+        }
     }
 
     @Override
@@ -68,7 +77,10 @@ public class DbUserService extends AbstractService implements UserService {
     @Override
     public User authenticateUser(@NotNull String value, @NotNull String password) {
         final User user = userRepository.findUserByLoginOrEmail(value);
-        if (user.getPassword().equals(passwordEncoder.encode(password))) {
+        if (user == null) {
+            return null;
+        }
+        if (passwordEncoder.matches(password, user.getPassword())) {
             log.info("User authenicated: {}", user.toString());
             return user;
         }
@@ -79,6 +91,11 @@ public class DbUserService extends AbstractService implements UserService {
     @Override
     public User getUserByLoginOrEmail(@NotNull String value) {
         return userRepository.findUserByLoginOrEmail(value);
+    }
+
+    @Override
+    public User getUserByLoginOrByEmail(@NotNull String login, @NotNull String email) {
+        return userRepository.findUsersByLoginOrByEmail(login, email);
     }
 
     @Nullable
@@ -103,13 +120,10 @@ public class DbUserService extends AbstractService implements UserService {
         return userRepository.findUserByLogin(login) != null;
     }
 
-    @Override
-    protected void setTestEnvironment() {
 
-    }
+//    @Override
+//    public void drop() {
+//        userRepository.deleteAll();
+//    }
 
-    @Override
-    protected void setProductionEnvironment() {
-
-    }
 }

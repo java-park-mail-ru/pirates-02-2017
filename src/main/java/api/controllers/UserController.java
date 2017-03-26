@@ -4,6 +4,7 @@ import api.model.User;
 import api.services.DbUserService;
 import api.services.generic.AbstractService;
 import api.controllers.generic.ApplicationController;
+import api.services.generic.UserService;
 import api.utils.info.*;
 import api.utils.response.*;
 import api.utils.response.generic.ResponseBody;
@@ -22,10 +23,10 @@ import static api.controllers.SessionController.USER_ID;
 @RequestMapping(path = "/user")
 public final class UserController {
 
-    private final DbUserService accountService;
+    private final UserService accountService;
     private final ApplicationContext appContext;
 
-    public UserController(@NotNull DbUserService accountService,
+    public UserController(@NotNull UserService accountService,
                           @NotNull ApplicationContext appContext) {
         this.accountService = accountService;
         this.appContext = appContext;

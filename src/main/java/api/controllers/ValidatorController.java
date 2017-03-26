@@ -3,6 +3,7 @@ package api.controllers;
 import api.services.DbUserService;
 import api.services.generic.AbstractService;
 import api.controllers.generic.ApplicationController;
+import api.services.generic.UserService;
 import api.utils.info.ValueInfo;
 import api.utils.response.*;
 import api.utils.validator.generic.Validator;
@@ -19,10 +20,10 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 @RequestMapping(path = "/validator")
 public class ValidatorController {
 
-    private final DbUserService accountService;
+    private final UserService accountService;
     private final ApplicationContext appContext;
 
-    public ValidatorController(@NotNull DbUserService accountService,
+    public ValidatorController(@NotNull UserService accountService,
                                @NotNull ApplicationContext appContext) {
 
         this.accountService = accountService;

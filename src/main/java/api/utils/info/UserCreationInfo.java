@@ -13,7 +13,7 @@ public final class UserCreationInfo {
     private final String password;
 
     @JsonCreator
-    UserCreationInfo(
+    public UserCreationInfo(
             @JsonProperty(value = "login", required = true) String login,
             @JsonProperty(value = "email", required = true) String email,
             @JsonProperty(value = "password", required = true) String password
