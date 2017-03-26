@@ -1,5 +1,6 @@
 package api.config;
 
+import org.hibernate.SessionFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 //import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
@@ -26,4 +27,8 @@ public class HerokuConfiguration {
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
+
+//    public SessionFactory sessionFactory() {
+//        SessionFactory.
+//    }
 }

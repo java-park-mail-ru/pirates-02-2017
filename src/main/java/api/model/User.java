@@ -12,10 +12,10 @@ public class User extends AbstractModel<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login", unique = true, length = 50)
+    @Column(name = "login", length = 50)
     private String login;
 
-    @Column(name = "email", unique = true, length = 50)
+    @Column(name = "email", length = 50)
     private String email;
 
     @Column(name = "password", length = 100)
