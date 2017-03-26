@@ -2,7 +2,6 @@ package api.services;
 
 import api.model.User;
 import api.repository.UserRepository;
-import api.services.generic.AbstractService;
 import api.services.generic.UserService;
 import api.utils.info.UserCreationInfo;
 import org.jetbrains.annotations.NotNull;
