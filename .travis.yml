@@ -8,8 +8,6 @@ before_script:
 language: java
 jdk:
 - oraclejdk8
-script:
-- mvn clean install spring-boot:repackage
 branches:
   only:
   - master
