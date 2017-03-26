@@ -5,13 +5,13 @@ import api.model.User;
 import api.repository.UserRepository;
 import api.services.DbUserService;
 import api.services.generic.UserService;
-import api.utils.WebConfiguration;
 import api.utils.info.UserCreationInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -21,11 +21,11 @@ import java.time.LocalDateTime;
 import static org.junit.Assert.*;
 
 /**
- * Created by Vileven on 24.03.17.
+ * Тесты сервиса DbUserService в реальной postgresql базе
  */
-@SpringBootTest
+
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = Application.class)
+@SpringBootTest(classes = Application.class)
 public class DataBasePosgresTest {
 
     @Autowired
@@ -34,8 +34,8 @@ public class DataBasePosgresTest {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+//    @Autowired
+    final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
     @Before
@@ -114,25 +114,23 @@ public class DataBasePosgresTest {
         assertNull(authUser);
     }
 
+    @Test
+    public void getUserById() {
+        final User user = userRepository.findUserByLogin("sergey");
+        User findedUser = userService.getUserById(user.getId());
+        assertEquals(user, findedUser);
 
+        findedUser = userService.getUserById(user.getId() + 1);
+        assertNull(findedUser);
+    }
 
+    @Test
+    public void getUserByLogin() {
+        final User user = userRepository.findUserByLogin("sergey");
+        User findedUser = userService.getUserByLogin("sergey");
+        assertEquals(user, findedUser);
 
-//    @Configuration
-//    static class UserServiceTestContextConfiguration {
-//
-//        @Bean
-//        public UserService userService() {
-//           return new DbUserService(userRepository(), passwordEncoder());
-//        }
-//
-//        @Bean
-//        public UserRepository userRepository() {
-//            return Mockito.mock(UserRepository.class);
-//        }
-//
-//        @Bean
-//        public PasswordEncoder passwordEncoder() {
-//            return new BCryptPasswordEncoder();
-//        }
-//    }
+        findedUser = userService.getUserByLogin("sergey11");
+        assertNull(findedUser);
+    }
 }

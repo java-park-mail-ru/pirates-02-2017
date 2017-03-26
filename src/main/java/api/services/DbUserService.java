@@ -34,7 +34,7 @@ public class DbUserService implements UserService {
     @Override
     @Nullable
     public User createUser(@NotNull UserCreationInfo userData) {
-        User newUser = new User(userData.getLogin(), userData.getEmail(),
+        final User newUser = new User(userData.getLogin(), userData.getEmail(),
                 passwordEncoder.encode(userData.getPassword()), LocalDateTime.now(), LocalDateTime.now());
 
         final User createdUser = userRepository.save(newUser);
