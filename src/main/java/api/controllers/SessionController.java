@@ -2,7 +2,6 @@ package api.controllers;
 
 import api.model.User;
 import api.services.DbUserService;
-import api.services.generic.AbstractService;
 import api.controllers.generic.ApplicationController;
 import api.services.generic.UserService;
 import api.utils.response.*;
