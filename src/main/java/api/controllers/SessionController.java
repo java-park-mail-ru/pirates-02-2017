@@ -59,7 +59,7 @@ public class SessionController {
     @PostMapping("/logout")
     public ResponseEntity<? extends ResponseBody> logoutUser(HttpSession session) {
         session.invalidate();
-        return Response.ok("User deleted");
+        return Response.ok("User session deleted");
     }
 
     /**
