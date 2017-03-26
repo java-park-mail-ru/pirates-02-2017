@@ -15,9 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by Vileven on 24.03.17.
  */
 
-@Transactional
 @Configuration
-public class AbstractServiceTest {
+public class ServiceTestConfiguration {
 
     protected final UserRepository userRepository = Mockito.mock(UserRepository.class);
 

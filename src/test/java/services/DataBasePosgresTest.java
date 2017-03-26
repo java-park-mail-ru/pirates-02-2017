@@ -6,6 +6,7 @@ import api.repository.UserRepository;
 import api.services.DbUserService;
 import api.services.generic.UserService;
 import api.utils.info.UserCreationInfo;
+//import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
+//@SpringBootTest(classes = {TestContext.class, ServiceTestConfiguration.class})
 public class DataBasePosgresTest {
 
     @Autowired

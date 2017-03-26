@@ -75,7 +75,7 @@ public final class UserController {
     public ResponseEntity<? extends ResponseBody> changeUserLogin(@RequestBody UserLoginInfo requestBody,
                                                                   HttpSession session) {
         if (ValidatorChain.isValid(requestBody, false, appContext)) {
-            Object id = session.getAttribute(USER_ID);
+            final Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
                 accountService.changeLogin((Long) id, requestBody.getValue());
                 return Response.ok("Login changed");
