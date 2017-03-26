@@ -131,7 +131,68 @@ public class ValidatorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"value\":\"sergey\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].staus").value("error"))
+                .andExpect(jsonPath("$[0].status").value("error"))
+        ;
+    }
+
+    @Test
+    public void validateEmailExists() throws Exception {
+        mockMvc
+                .perform(post("/validator/email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"value\":\"email@mail.ru\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].status").value("error"))
+        ;
+    }
+
+    @Test
+    public void validateNotEmail() throws Exception {
+        mockMvc
+                .perform(post("/validator/email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"value\":\"emailmail.ru\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].status").value("error"))
+        ;
+    }
+
+
+    /**
+     * В идеале, пароль содержит одну строчну, прописную букву и цифру
+     */
+    @Test
+    public void validateWarnigForNotGoodPassword() throws Exception {
+        mockMvc
+                .perform(post("/validator/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"value\":\"asdhajsdasd\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].status").value("warning"))
+        ;
+
+        mockMvc
+                .perform(post("/validator/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"value\":\"1231243144\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].status").value("warning"))
+        ;
+
+        mockMvc
+                .perform(post("/validator/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"value\":\"HFAJDFHKJAF\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].status").value("warning"))
+        ;
+
+        mockMvc
+                .perform(post("/validator/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"value\":\"fjdskfaJKFDF123\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].status").value("ok"))
         ;
     }
 
