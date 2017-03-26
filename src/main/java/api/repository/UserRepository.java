@@ -1,6 +1,7 @@
 package api.repository;
 
 import api.model.User;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,38 +18,39 @@ import java.time.LocalDateTime;
 
 //@SuppressWarnings("InterfaceNeverImplemented")
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends BaseDAO<User, Long> {
+    @Override
+    default Class<User> getEntityClass() {
+        return User.class;
+    }
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE User u SET u.email = :email, u.updatedAt = :now WHERE u.id = :id")
     int updateEmail(@Param("id")Long id, @Param("email") String email, @Param("now")LocalDateTime now);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE User u SET u.login = :login, u.updatedAt = :now WHERE u.id = :id")
     int updateLogin(@Param("id")Long id, @Param("login") String login, @Param("now")LocalDateTime now);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE User u SET u.password = :password, u.updatedAt = :now WHERE u.id = :id")
     int updatePassword(@Param("id")Long id, @Param("password") String password, @Param("now")LocalDateTime now);
 
-    @Query("SELECT u FROM User u WHERE lower(u.login) = lower(:login)")
-    User findUserByLogin(@Param("login") String login);
-
-    @Query("SELECT u FROM User u WHERE lower(u.email) = lower(:email)")
     User findUserByEmail(@Param("email") String email);
 
-    @Query("SELECT u " +
-            "FROM User u " +
-            "WHERE lower(u.login) = lower(:login_or_email) OR lower(u.email) = lower(:login_or_email)")
+    User findUserByLogin(String login);
+
+    User findOne(Long id);
+
     User findUserByLoginOrEmail(@Param("login_or_email") String loginOrEmail);
 
 
+    /**
+     * Обрати внимание на анотацию Query, оно теперь бесполезна, но idea подсвечивает синтаксис если надо будет написать
+     * запрос может помочь
+     * @param login
+     * @param email
+     * @return
+     */
     @Query("SELECT u " +
             "FROM User u " +
             "WHERE lower(u.login) = lower(:login) OR lower(u.email) = lower(:email)")
     User findUsersByLoginOrByEmail(@Param("login") String login, @Param("email") String email);
 
+
+    User save(@NotNull User user);
 }

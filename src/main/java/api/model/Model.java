@@ -11,4 +11,8 @@ public interface Model<ID extends Serializable> {
      * @return id
      */
     ID getId();
+
+//    void assignId();
+
+    boolean isNew();
 }
