@@ -1,8 +1,9 @@
 package api.controllers;
 
 import api.model.User;
-import api.services.generic.AbstractAccountService;
+import api.services.DbUserService;
 import api.controllers.generic.ApplicationController;
+import api.services.generic.UserService;
 import api.utils.response.*;
 import api.utils.info.UserAuthInfo;
 import api.utils.response.generic.ResponseBody;
@@ -16,13 +17,16 @@ import javax.servlet.http.HttpSession;
         "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/session")
-public class SessionController extends ApplicationController {
+public class SessionController {
 
     public static final String USER_ID = "USER_ID";
+    private final UserService accountService;
+    private final ApplicationContext appContext;
 
-    public SessionController(@NotNull AbstractAccountService accountService,
+    public SessionController(@NotNull UserService accountService,
                              @NotNull ApplicationContext appContext) {
-        super(accountService, appContext);
+        this.accountService = accountService;
+        this.appContext = appContext;
     }
 
 
@@ -54,7 +58,7 @@ public class SessionController extends ApplicationController {
     @PostMapping("/logout")
     public ResponseEntity<? extends ResponseBody> logoutUser(HttpSession session) {
         session.invalidate();
-        return Response.ok("User deleted");
+        return Response.ok("User session deleted");
     }
 
     /**

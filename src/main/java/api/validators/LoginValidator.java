@@ -1,7 +1,8 @@
 package api.validators;
 
 
-import api.services.AccountService;
+//import api.services.AccountService;
+import api.services.DbUserService;
 import api.utils.validator.generic.Validator;
 import api.utils.validator.ValidatorMessage;
 import api.utils.validator.ValidatorStatus;
@@ -12,9 +13,9 @@ import java.util.ArrayList;
 
 public class LoginValidator extends Validator {
 
-    private final AccountService accountService;
+    private final DbUserService accountService;
 
-    public LoginValidator(final AccountService accountService) {
+    public LoginValidator(final DbUserService accountService) {
         this.accountService = accountService;
     }
 

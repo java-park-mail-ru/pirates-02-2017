@@ -1,16 +1,13 @@
 package api;
 
-import api.services.generic.AbstractAccountService;
-import api.utils.test.TestHeaderInterceptor;
 import api.utils.validator.ValidatorContext;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 @SpringBootApplication
 @Import(ValidatorContext.class)

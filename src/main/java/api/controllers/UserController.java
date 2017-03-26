@@ -1,8 +1,9 @@
 package api.controllers;
 
 import api.model.User;
-import api.services.generic.AbstractAccountService;
+import api.services.DbUserService;
 import api.controllers.generic.ApplicationController;
+import api.services.generic.UserService;
 import api.utils.info.*;
 import api.utils.response.*;
 import api.utils.response.generic.ResponseBody;
@@ -19,11 +20,15 @@ import static api.controllers.SessionController.USER_ID;
         "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/user")
-public final class UserController extends ApplicationController {
+public final class UserController {
 
-    public UserController(@NotNull AbstractAccountService accountService,
+    private final UserService accountService;
+    private final ApplicationContext appContext;
+
+    public UserController(@NotNull UserService accountService,
                           @NotNull ApplicationContext appContext) {
-        super(accountService, appContext);
+        this.accountService = accountService;
+        this.appContext = appContext;
     }
 
 
@@ -69,7 +74,7 @@ public final class UserController extends ApplicationController {
     public ResponseEntity<? extends ResponseBody> changeUserLogin(@RequestBody UserLoginInfo requestBody,
                                                                   HttpSession session) {
         if (ValidatorChain.isValid(requestBody, false, appContext)) {
-            Object id = session.getAttribute(USER_ID);
+            final Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
                 accountService.changeLogin((Long) id, requestBody.getValue());
                 return Response.ok("Login changed");
@@ -136,9 +141,7 @@ public final class UserController extends ApplicationController {
         final Object id = session.getAttribute(USER_ID);
 
         if (id instanceof Long) {
-            if (!accountService.deleteUserbyId((Long) id)) {
-                return Response.invalidSession();
-            }
+            accountService.deleteUserbyId((Long) id);
         } else {
             return Response.invalidSession();
         }
