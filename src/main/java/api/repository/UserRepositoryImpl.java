@@ -10,6 +10,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,7 +36,8 @@ public class UserRepositoryImpl extends AbstractBaseDAO<User, Long> implements U
     public int updateEmail(Long id, String email, LocalDateTime now) {
         //чет тут я понял, что возможно стоило не именнованные параметры делать, а просто порядковые... Можно переписать,
         // можно оставить
-        Map<String, Object> params = Collections.singletonMap("id", id);
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
         params.put("email", email);
         params.put("now", now);
         return updateByQueryWithParams("UPDATE User u SET u.email = :email, u.updatedAt = :now WHERE u.id = :id",
@@ -68,15 +70,18 @@ public class UserRepositoryImpl extends AbstractBaseDAO<User, Long> implements U
 
     @Override
     public User findUserByLoginOrEmail(String loginOrEmail) {
-        return findByQueryWithParams("SELECT u FROM User u WHERE lower(u.login_or_email) = lower(:login_or_email)",
+        return findByQueryWithParams("SELECT u FROM User u WHERE lower(u.login) = lower(:login_or_email)" +
+                        "OR lower(u.email) = lower(:login_or_email)",
                 Collections.singletonMap("login_or_email", loginOrEmail)).get(0);
     }
 
     @Override
     public User findUsersByLoginOrByEmail(String login, String email) {
-        Map<String, Object> params = Collections.singletonMap("login", login);
+        Map<String, Object> params = new HashMap<>();
+        params.put("login", login);
         params.put("email", email);
-        return findByQueryWithParams("SELECT u FROM User u WHERE lower(u.login_or_email) = lower(:login_or_email)",
+        return findByQueryWithParams("SELECT u FROM User u WHERE lower(u.login) = lower(:login) OR " +
+                        "lower(u.email) = lower(:email)",
                 params).get(0);
     }
 

@@ -88,4 +88,45 @@ public class UserRepositoryTest {
         assertEquals("email@mail.ru", foundUser.getEmail());
         assertEquals(user, foundUser);
     }
+
+    @Test
+    public void findUserByLoginOrEmail() {
+        user = userRepository.save(user);
+        User foundUser = userRepository.findUserByLoginOrEmail("sergey");
+        assertNotNull(foundUser);
+        assertEquals(user, foundUser);
+
+        foundUser = userRepository.findUserByLoginOrEmail("email@mail.ru");
+        assertNotNull(foundUser);
+        assertEquals(user, foundUser);
+    }
+
+    @Test
+    public void findUserByLoginOrByEmail() {
+        user = userRepository.save(user);
+        User foundUser = userRepository.findUsersByLoginOrByEmail("sergey", "");
+        assertNotNull(foundUser);
+        assertEquals(user, foundUser);
+
+        foundUser = userRepository.findUsersByLoginOrByEmail("", "email@mail.ru");
+        assertNotNull(foundUser);
+        assertEquals(user, foundUser);
+
+        foundUser = userRepository.findUsersByLoginOrByEmail("sergey", "email@mail.ru");
+        assertNotNull(foundUser);
+        assertEquals(user, foundUser);
+    }
+
+    @Test
+    public void updateEmail() {
+        user = userRepository.save(user);
+
+        int num = userRepository.updateEmail(user.getId(), "email@yandex.ru", LocalDateTime.now());
+        assertEquals(1, num);
+
+        final User updatedUser = userRepository.find(user.getId());
+        assertNotEquals(user, updatedUser);
+
+        assertEquals("email@yandex.ru", updatedUser.getEmail());
+    }
 }
