@@ -14,9 +14,10 @@ import java.util.Map;
 public interface BaseDAO<T extends Model<ID>, ID extends Serializable> extends EntityManagerAware {
     Class<T> getEntityClass();
 
-    default void persist(T entity) {
+    default T persist(T entity) {
         getEntityManager().persist(entity);
         getEntityManager().flush();
+        return getEntityManager().find(getEntityClass(), entity.getId());
     }
 
     default T find(ID id) {
@@ -28,13 +29,15 @@ public interface BaseDAO<T extends Model<ID>, ID extends Serializable> extends E
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
-        return query.getResultList().size();
+        return query.executeUpdate();
     }
 
     default void delete(ID id) {
         final T entity = getEntityManager().find(getEntityClass(), id);
         getEntityManager().remove(entity);
     }
+
+    void deleteAll();
 
     default List<T> findByQuery(String jpqlQueryString) {
         return findByQueryWithParams(jpqlQueryString, Collections.emptyMap());

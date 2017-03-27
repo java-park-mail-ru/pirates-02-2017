@@ -5,6 +5,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@PersistenceContext
 @Table(name = "users")
 public class User extends AbstractModel<Long> {
     @Id

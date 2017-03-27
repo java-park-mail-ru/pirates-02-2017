@@ -3,7 +3,10 @@ package api.repository;
 import api.model.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityListeners;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -12,6 +15,8 @@ import java.util.Map;
 /**
  * Created by Vileven on 27.03.17.
  */
+@Repository("UserRepository")
+@Transactional
 public class UserRepositoryImpl extends AbstractBaseDAO<User, Long> implements UserRepository {
 
     @Override
@@ -77,6 +82,11 @@ public class UserRepositoryImpl extends AbstractBaseDAO<User, Long> implements U
 
     @Override
     public User save(@NotNull User user) {
-        return null;
+        return persist(user);
+    }
+
+    @Override
+    public void deleteAll() {
+        getEntityManager().createQuery("DELETE FROM User u").executeUpdate();
     }
 }
