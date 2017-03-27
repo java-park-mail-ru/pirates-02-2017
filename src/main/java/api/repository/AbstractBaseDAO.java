@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public abstract class AbstractBaseDAO<T extends Model<ID>, ID extends Serializable> implements BaseDAO<T, ID> {
     @PersistenceContext
-    EntityManager entityManager;
+    protected EntityManager entityManager;
 
     @Override
     public EntityManager getEntityManager() {

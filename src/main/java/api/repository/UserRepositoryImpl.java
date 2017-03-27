@@ -39,27 +39,40 @@ public class UserRepositoryImpl extends AbstractBaseDAO<User, Long> implements U
 
     @Override
     public int updateLogin(Long id, String login, LocalDateTime now) {
-        return 0;
+        Map<String, Object> params = Collections.singletonMap("id", id);
+        params.put("login", login);
+        params.put("now", now);
+        return updateByQueryWithParams("UPDATE User u SET u.login = :login, u.updatedAt = :now WHERE u.id = :id",
+                params);
     }
 
     @Override
     public int updatePassword(Long id, String password, LocalDateTime now) {
-        return 0;
+        Map<String, Object> params = Collections.singletonMap("id", id);
+        params.put("password", password);
+        params.put("now", now);
+        return updateByQueryWithParams("UPDATE User u SET u.password = :password, u.updatedAt = :now WHERE u.id = :id",
+                params);
     }
 
     @Override
     public User findUserByEmail(String email) {
-        return null;
+        return findByQueryWithParams("SELECT u FROM User u WHERE lower(u.email) = lower(:email)",
+                Collections.singletonMap("email", email)).get(0);
     }
 
     @Override
     public User findUserByLoginOrEmail(String loginOrEmail) {
-        return null;
+        return findByQueryWithParams("SELECT u FROM User u WHERE lower(u.login_or_email) = lower(:login_or_email)",
+                Collections.singletonMap("login_or_email", loginOrEmail)).get(0);
     }
 
     @Override
     public User findUsersByLoginOrByEmail(String login, String email) {
-        return null;
+        Map<String, Object> params = Collections.singletonMap("login", login);
+        params.put("email", email);
+        return findByQueryWithParams("SELECT u FROM User u WHERE lower(u.login_or_email) = lower(:login_or_email)",
+                params).get(0);
     }
 
     @Override
