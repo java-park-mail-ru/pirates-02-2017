@@ -121,12 +121,47 @@ public class UserRepositoryTest {
     public void updateEmail() {
         user = userRepository.save(user);
 
-        int num = userRepository.updateEmail(user.getId(), "email@yandex.ru", LocalDateTime.now());
+        final int num = userRepository.updateEmail(user.getId(), "email@yandex.ru", LocalDateTime.now());
         assertEquals(1, num);
 
         final User updatedUser = userRepository.find(user.getId());
-        assertNotEquals(user, updatedUser);
+        assertNotEquals(user.getEmail(), updatedUser.getEmail());
 
         assertEquals("email@yandex.ru", updatedUser.getEmail());
+    }
+
+    @Test
+    public void updatePassword() {
+        user = userRepository.save(user);
+
+        final int num = userRepository.updatePassword(user.getId(), passwordEncoder.encode("123qwerty"),
+                LocalDateTime.now());
+        assertEquals(1, num);
+
+        final User updatedUser = userRepository.find(user.getId());
+        assertTrue(passwordEncoder.matches("123qwerty", updatedUser.getPassword()));
+    }
+
+    @Test
+    public void updateLogin() {
+        user = userRepository.save(user);
+
+        final int num = userRepository.updateLogin(user.getId(), "vileven", LocalDateTime.now());
+        assertEquals(1, num);
+
+        final User updatedUser = userRepository.find(user.getId());
+        assertNotEquals(user.getLogin(), updatedUser.getLogin());
+
+        assertEquals("vileven", updatedUser.getLogin());
+    }
+
+    @Test
+    public void deleteOne() {
+        user = userRepository.save(user);
+
+        userRepository.delete(user.getId());
+
+        final User foundUser = userRepository.find(user.getId());
+        assertNull(foundUser);
     }
 }

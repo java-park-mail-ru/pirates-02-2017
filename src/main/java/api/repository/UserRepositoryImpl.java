@@ -2,6 +2,7 @@ package api.repository;
 
 import api.model.User;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,14 +24,25 @@ public class UserRepositoryImpl extends AbstractBaseDAO<User, Long> implements U
 
     @Override
     public User findUserByLogin(String login) {
-        return findByQueryWithParams("SELECT u FROM User u WHERE lower(u.login) = lower(:login)",
-                Collections.singletonMap("login", login)).get(0);
+         final List<User> res = findByQueryWithParams("SELECT u FROM User u WHERE lower(u.login) = lower(:login)",
+                Collections.singletonMap("login", login));
+         if (!res.isEmpty()) {
+             return res.get(0);
+         } else {
+             return null;
+         }
     }
 
+    @Nullable
     @Override
     public User findOne(Long id) {
-        return findByQueryWithParams("SELECT u FROM User u WHERE u.id = :id",
-                Collections.singletonMap("id", id)).get(0);
+        final List<User> res = findByQueryWithParams("SELECT u FROM User u WHERE u.id = :id",
+                Collections.singletonMap("id", id));
+        if (!res.isEmpty()) {
+            return res.get(0);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -46,7 +59,8 @@ public class UserRepositoryImpl extends AbstractBaseDAO<User, Long> implements U
 
     @Override
     public int updateLogin(Long id, String login, LocalDateTime now) {
-        Map<String, Object> params = Collections.singletonMap("id", id);
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
         params.put("login", login);
         params.put("now", now);
         return updateByQueryWithParams("UPDATE User u SET u.login = :login, u.updatedAt = :now WHERE u.id = :id",
@@ -55,24 +69,37 @@ public class UserRepositoryImpl extends AbstractBaseDAO<User, Long> implements U
 
     @Override
     public int updatePassword(Long id, String password, LocalDateTime now) {
-        Map<String, Object> params = Collections.singletonMap("id", id);
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
         params.put("password", password);
         params.put("now", now);
         return updateByQueryWithParams("UPDATE User u SET u.password = :password, u.updatedAt = :now WHERE u.id = :id",
                 params);
     }
 
+    @Nullable
     @Override
     public User findUserByEmail(String email) {
-        return findByQueryWithParams("SELECT u FROM User u WHERE lower(u.email) = lower(:email)",
-                Collections.singletonMap("email", email)).get(0);
+        List<User> res = findByQueryWithParams("SELECT u FROM User u WHERE lower(u.email) = lower(:email)",
+                Collections.singletonMap("email", email));
+        if (!res.isEmpty()) {
+            return res.get(0);
+        } else {
+            return null;
+        }
     }
 
+    @Nullable
     @Override
     public User findUserByLoginOrEmail(String loginOrEmail) {
-        return findByQueryWithParams("SELECT u FROM User u WHERE lower(u.login) = lower(:login_or_email)" +
+        List<User> res =  findByQueryWithParams("SELECT u FROM User u WHERE lower(u.login) = lower(:login_or_email)" +
                         "OR lower(u.email) = lower(:login_or_email)",
-                Collections.singletonMap("login_or_email", loginOrEmail)).get(0);
+                Collections.singletonMap("login_or_email", loginOrEmail));
+        if (!res.isEmpty()) {
+            return res.get(0);
+        } else {
+            return null;
+        }
     }
 
     @Override

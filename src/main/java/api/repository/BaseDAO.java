@@ -1,7 +1,9 @@
 package api.repository;
 
 import api.model.Model;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.util.Collections;
@@ -25,13 +27,14 @@ public interface BaseDAO<T extends Model<ID>, ID extends Serializable> extends E
     }
 
     default int updateByQueryWithParams(String jpqlQueryString, Map<String, Object> params) {
-        TypedQuery<T> query = getEntityManager().createQuery(jpqlQueryString, getEntityClass());
+        Query query = getEntityManager().createQuery(jpqlQueryString);
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
         return query.executeUpdate();
     }
 
+    @Transactional
     default void delete(ID id) {
         final T entity = getEntityManager().find(getEntityClass(), id);
         getEntityManager().remove(entity);
