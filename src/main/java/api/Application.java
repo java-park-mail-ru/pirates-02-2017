@@ -20,7 +20,7 @@ public class Application {
 
 
     public static void main(String[] args) throws Exception {
-        Migrations.migrate();
+//        Migrations.migrate();
         SpringApplication.run(Application.class, args);
     }
 
