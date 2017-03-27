@@ -1,6 +1,8 @@
 package api;
 
+import api.config.Migrations;
 import api.utils.validator.ValidatorContext;
+import org.flywaydb.core.Flyway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -18,6 +20,7 @@ public class Application {
 
 
     public static void main(String[] args) throws Exception {
+        Migrations.migrate();
         SpringApplication.run(Application.class, args);
     }
 

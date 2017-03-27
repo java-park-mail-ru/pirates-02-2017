@@ -27,7 +27,7 @@ public class UserRepositoryImpl extends AbstractBaseDAO<User, Long> implements U
 
     @Override
     public User findOne(Long id) {
-        return findByQueryWithParams("SELECT u FROM User u WHERE i.id = :id",
+        return findByQueryWithParams("SELECT u FROM User u WHERE u.id = :id",
                 Collections.singletonMap("id", id)).get(0);
     }
 

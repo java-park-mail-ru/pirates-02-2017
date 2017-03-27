@@ -33,7 +33,7 @@ public class UserRepositoryTest {
     @Autowired
     protected EntityManager em;
 
-    public void flushAndClear(){
+    private void flushAndClear(){
         em.flush();
         em.clear();
     }
@@ -45,6 +45,8 @@ public class UserRepositoryTest {
         user = new User("sergey", "email@mail.ru",
                 passwordEncoder.encode("qwerty123"), LocalDateTime.now(), LocalDateTime.now());
         userRepository.deleteAll();
+        assertEquals(0, em.createQuery("SELECT u FROM User u").getResultList().size());
+
     }
 
     @Test
@@ -60,5 +62,30 @@ public class UserRepositoryTest {
         assertNotNull(user);
         assertNotNull(user.getId());
         assertEquals("sergey", user.getLogin());
+    }
+
+    @Test
+    public void findUserById() {
+        user = userRepository.save(user);
+        final User foundUser = userRepository.findOne(user.getId());
+        assertEquals(user, foundUser);
+    }
+
+    @Test
+    public void findUserByLogin() {
+        user = userRepository.save(user);
+        final User foundUser = userRepository.findUserByLogin("sergey");
+        assertNotNull(foundUser);
+        assertEquals("sergey", foundUser.getLogin());
+        assertEquals(user, foundUser);
+    }
+
+    @Test
+    public void findUserByEmail() {
+        user = userRepository.save(user);
+        final User foundUser = userRepository.findUserByEmail("email@mail.ru");
+        assertNotNull(foundUser);
+        assertEquals("email@mail.ru", foundUser.getEmail());
+        assertEquals(user, foundUser);
     }
 }
