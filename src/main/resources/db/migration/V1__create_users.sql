@@ -1,3 +1,7 @@
+-- noinspection SqlNoDataSourceInspectionForFile
+-- noinspection SqlDialectInspectionForFile
+
+
 CREATE TABLE IF NOT EXISTS users (
   id         BIGSERIAL PRIMARY KEY,
   login      VARCHAR(50)  NOT NULL,

@@ -3,16 +3,29 @@ package api.model;
 import java.io.Serializable;
 
 /**
- * Интерфейс модели(строки таблицы)
+ * Базовый класс всех моделей
  */
-public interface Model<ID extends Serializable> {
-    /**
-     * Модель должна возвращать идентификатор
-     * @return id
-     */
-    ID getId();
+public abstract class Model<ID extends Serializable> {
 
-//    void assignId();
+    public abstract ID getId();
 
-    boolean isNew();
+
+    public boolean isNew() {
+        return getId() == null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Model)) return false;
+
+        final Model that = (Model) o;
+
+        return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getId() != null ? getId().hashCode() : 0;
+    }
 }

@@ -15,9 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Vileven on 27.03.17.
- */
+
 @Repository("UserRepository")
 @Transactional
 public class UserRepositoryImpl extends AbstractBaseDAO<User, Long> implements UserRepository {
