@@ -4,7 +4,7 @@ import api.services.AccountService;
 import org.springframework.context.ApplicationContext;
 
 
-public class ApplicationController {
+public abstract class ApplicationController {
 
     protected final AccountService accountService;
     protected final ApplicationContext appContext;
