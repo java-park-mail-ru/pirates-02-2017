@@ -5,6 +5,8 @@ import api.DAO.HibernateDAO;
 import api.model.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -13,7 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 
-public class HibernateUserRepository extends HibernateDAO<User, Long> implements IUserRepository<User, Long> {
+@Repository("UserRepository")
+@Transactional
+public class HibernateUserRepository extends HibernateDAO<User, Long> implements UserRepository {
 
     private User firstOrNull(List<User> result) {
         if (!result.isEmpty()) {
@@ -25,12 +29,12 @@ public class HibernateUserRepository extends HibernateDAO<User, Long> implements
 
 
     @Override
-    public int updateEmail(@NotNull Long id, @NotNull String email, @NotNull LocalDateTime now) {
+    public int updateEmail(long id, @NotNull String email) {
         final Map<String, Object> params = new HashMap<>();
 
         params.put("id", id);
         params.put("email", email);
-        params.put("now", now);
+        params.put("now", LocalDateTime.now());
 
         return this.update("UPDATE User u SET u.email = :email, u.updatedAt = :now WHERE u.id = :id",
                 params);
@@ -38,12 +42,12 @@ public class HibernateUserRepository extends HibernateDAO<User, Long> implements
 
 
     @Override
-    public int updateLogin(@NotNull Long id, @NotNull String login, @NotNull LocalDateTime now) {
+    public int updateLogin(long id, @NotNull String login) {
         final Map<String, Object> params = new HashMap<>();
 
         params.put("id", id);
         params.put("login", login);
-        params.put("now", now);
+        params.put("now", LocalDateTime.now());
 
         return this.update("UPDATE User u SET u.login = :login, u.updatedAt = :now WHERE u.id = :id",
                 params);
@@ -51,12 +55,12 @@ public class HibernateUserRepository extends HibernateDAO<User, Long> implements
 
 
     @Override
-    public int updatePassword(@NotNull Long id, @NotNull String password, @NotNull LocalDateTime now) {
+    public int updatePassword(long id, @NotNull String password) {
         final Map<String, Object> params = new HashMap<>();
 
         params.put("id", id);
         params.put("password", password);
-        params.put("now", now);
+        params.put("now", LocalDateTime.now());
 
         return this.update("UPDATE User u SET u.password = :password, u.updatedAt = :now WHERE u.id = :id",
                 params);
@@ -85,7 +89,7 @@ public class HibernateUserRepository extends HibernateDAO<User, Long> implements
 
     @Nullable
     @Override
-    public User findOne(@NotNull Long id) {
+    public User findOne(long id) {
         final List<User> res = this.select("SELECT u FROM User u WHERE u.id = :id",
                 Collections.singletonMap("id", id));
 
@@ -107,6 +111,18 @@ public class HibernateUserRepository extends HibernateDAO<User, Long> implements
     @Override
     public Class<User> getEntityClass() {
         return User.class;
+    }
+
+
+    @Override
+    public User save(@NotNull User user) {
+        return this.persist(user);
+    }
+
+
+    @Override
+    public void delete(long id) {
+        super.delete(id);
     }
 
 }

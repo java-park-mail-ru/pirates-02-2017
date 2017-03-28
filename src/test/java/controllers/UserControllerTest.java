@@ -2,7 +2,7 @@ package controllers;
 
 import api.Application;
 import api.model.User;
-import api.repository_old.UserRepository;
+import api.repository.UserRepository;
 import api.utils.ErrorCodes;
 import org.junit.Before;
 import org.junit.Test;

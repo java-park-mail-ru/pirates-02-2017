@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public interface IDAO<T extends Model<ID>, ID extends Serializable> {
+public interface DAO<T extends Model<ID>, ID extends Serializable> {
 
     /**
      * Сохраняет запись

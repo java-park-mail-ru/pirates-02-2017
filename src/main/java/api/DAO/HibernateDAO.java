@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public abstract class HibernateDAO<T extends Model<ID>, ID extends Serializable> implements IDAO<T, ID> {
+public abstract class HibernateDAO<T extends Model<ID>, ID extends Serializable> implements DAO<T, ID> {
 
     @PersistenceContext
     private EntityManager entityManager;
