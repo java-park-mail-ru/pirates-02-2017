@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 //@SpringBootTest(classes = {TestContext.class, ServiceTestConfiguration.class})
-public class DataBasePosgresTest {
+public class DataBasePgSQLTest {
 
     @Autowired
     AccountService accountService;
