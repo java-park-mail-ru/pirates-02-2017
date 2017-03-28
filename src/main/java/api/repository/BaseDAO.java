@@ -10,9 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Vileven on 27.03.17.
- */
+
 public interface BaseDAO<T extends Model<ID>, ID extends Serializable> extends EntityManagerAware {
     Class<T> getEntityClass();
 
