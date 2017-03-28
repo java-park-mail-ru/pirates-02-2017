@@ -2,6 +2,7 @@ package api.repository;
 
 import api.model.User;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 /**
- * На основе этого интерфейса Spring Data предоставит реализации с методов для работы с БД
+ * Интерфейс предоставляющий работу с Enitity
  */
 
 //@SuppressWarnings("InterfaceNeverImplemented")
@@ -28,33 +29,27 @@ public interface UserRepository extends BaseDAO<User, Long> {
         return User.class;
     }
 
-    int updateEmail(@Param("id")Long id, @Param("email") String email, @Param("now")LocalDateTime now);
+    int updateEmail(@NotNull Long id, @NotNull String email, @NotNull LocalDateTime now);
 
-    int updateLogin(@Param("id")Long id, @Param("login") String login, @Param("now")LocalDateTime now);
+    int updateLogin(@NotNull Long id, @NotNull  String login, @NotNull LocalDateTime now);
 
-    int updatePassword(@Param("id")Long id, @Param("password") String password, @Param("now")LocalDateTime now);
+    int updatePassword(@NotNull Long id, @NotNull String password,@NotNull LocalDateTime now);
 
-    User findUserByEmail(@Param("email") String email);
+    @Nullable
+    User findUserByEmail(@NotNull  String email);
 
-    User findUserByLogin(String login);
+    @Nullable
+    User findUserByLogin(@NotNull String login);
 
-    User findOne(Long id);
+    @Nullable
+    User findOne(@NotNull Long id);
 
-    User findUserByLoginOrEmail(@Param("login_or_email") String loginOrEmail);
+    @Nullable
+    User findUserByLoginOrEmail(@NotNull  String loginOrEmail);
 
+    @Nullable
+    User findUsersByLoginOrByEmail(@NotNull  String login, @NotNull  String email);
 
-    /**
-     * Обрати внимание на анотацию Query, оно теперь бесполезна, но idea подсвечивает синтаксис если надо будет написать
-     * запрос может помочь
-     * @param login
-     * @param email
-     * @return
-     */
-    @Query("SELECT u " +
-            "FROM User u " +
-            "WHERE lower(u.login) = lower(:login) OR lower(u.email) = lower(:email)")
-    User findUsersByLoginOrByEmail(@Param("login") String login, @Param("email") String email);
-
-
+    @Nullable
     User save(@NotNull User user);
 }
