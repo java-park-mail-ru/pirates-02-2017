@@ -1,6 +1,5 @@
 package api.utils.response;
 
-import java.time.LocalDateTime;
 
 /**
  * Тело ответа User

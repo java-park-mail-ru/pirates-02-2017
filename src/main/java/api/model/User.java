@@ -28,7 +28,7 @@ public class User extends Model<Long> {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    private User(){};
+    protected User(){};
 
     public User(String login, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.login = login;

@@ -5,6 +5,7 @@ import api.repository.UserRepository;
 import api.services.generic.AbstractService;
 import api.utils.info.UserCreationInfo;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class AccountService extends AbstractService {
     }
 
 
+    @Nullable
     public User createUser(@NotNull UserCreationInfo userData) {
         final User newUser = new User(userData.getLogin(), userData.getEmail(),
                 this.encoder.encode(userData.getPassword()), LocalDateTime.now(), LocalDateTime.now());
@@ -80,6 +82,7 @@ public class AccountService extends AbstractService {
     }
 
 
+    @Nullable
     public User getUserByLoginOrEmail(@NotNull String value) {
         return userRepository.findUserByLoginOrEmail(value);
     }
@@ -92,11 +95,13 @@ public class AccountService extends AbstractService {
     */
 
 
+    @Nullable
     public User getUserByLogin(@NotNull String login) {
         return userRepository.findUserByLogin(login);
     }
 
 
+    @Nullable
     public User getUserById(long id) {
         return userRepository.findOne(id);
     }

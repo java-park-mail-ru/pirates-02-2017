@@ -21,13 +21,8 @@ import static api.controllers.SessionController.USER_ID;
 @RequestMapping(path = "/user")
 public final class UserController extends ApplicationController {
 
-    private final AccountService accountService;
-    private final ApplicationContext appContext;
-
     public UserController(AccountService accountService, ApplicationContext appContext) {
         super(accountService, appContext);
-        this.accountService = accountService;
-        this.appContext = appContext;
     }
 
 
@@ -98,7 +93,7 @@ public final class UserController extends ApplicationController {
     public ResponseEntity<? extends ResponseBody> changeUserEmail(@RequestBody UserEmailInfo requestBody,
                                                                   HttpSession session) {
         if (ValidatorChain.isValid(requestBody, false, appContext)) {
-            Object id = session.getAttribute(USER_ID);
+            final Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
                 accountService.changeEmail((Long) id, requestBody.getValue());
                 return Response.ok("Email changed");
@@ -121,7 +116,7 @@ public final class UserController extends ApplicationController {
     public ResponseEntity<? extends ResponseBody> changeUserPassword(@RequestBody UserPasswordInfo requestBody,
                                                                      HttpSession session) {
         if (ValidatorChain.isValid(requestBody, false, appContext)) {
-            Object id = session.getAttribute(USER_ID);
+            final Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
                 accountService.changePassword((Long) id, requestBody.getValue());
                 return Response.ok("Login changed");

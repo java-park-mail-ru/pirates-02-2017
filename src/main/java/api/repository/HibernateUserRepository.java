@@ -19,6 +19,7 @@ import java.util.Map;
 @Transactional
 public class HibernateUserRepository extends HibernateDAO<User, Long> implements UserRepository {
 
+    @Nullable
     private User firstOrNull(List<User> result) {
         if (!result.isEmpty()) {
             return result.get(0);

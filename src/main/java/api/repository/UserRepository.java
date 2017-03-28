@@ -1,13 +1,10 @@
 package api.repository;
 
 
-import api.model.Model;
 import api.model.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 
 public interface UserRepository {

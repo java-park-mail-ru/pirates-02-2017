@@ -1,9 +1,5 @@
 package api.utils.validator;
 
-/**
- * Created by coon on 08.03.17.
- */
-
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonFormat;

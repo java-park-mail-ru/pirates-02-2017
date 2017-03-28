@@ -1,7 +1,6 @@
 package api.utils.info;
 
 
-import api.utils.validator.FieldValidates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
