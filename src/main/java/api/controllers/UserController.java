@@ -15,17 +15,18 @@ import javax.servlet.http.HttpSession;
 
 import static api.controllers.SessionController.USER_ID;
 
+
 @CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
         "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/user")
-public final class UserController {
+public final class UserController extends ApplicationController {
 
     private final AccountService accountService;
     private final ApplicationContext appContext;
 
-    public UserController(@NotNull AccountService accountService,
-                          @NotNull ApplicationContext appContext) {
+    public UserController(AccountService accountService, ApplicationContext appContext) {
+        super(accountService, appContext);
         this.accountService = accountService;
         this.appContext = appContext;
     }
@@ -46,6 +47,7 @@ public final class UserController {
         return Response.okWithUser(user, "success");
     }
 
+
     /**
      * Зарегистрировать пользователя
      * @param requestBody <code>login, email, password</code> в формате json
@@ -62,6 +64,7 @@ public final class UserController {
         return Response.ok("User created");
         //return Response.userAlreadyExists();
     }
+
 
     /**
      * Изменить логин пользователя текущей сессии
@@ -85,6 +88,7 @@ public final class UserController {
         }
     }
 
+
     /**
      * Изменить email пользователя текущей сессии
      * @param requestBody тело запроса с новым email
@@ -107,6 +111,7 @@ public final class UserController {
         }
     }
 
+
     /**
      * Изменить пароль пользователя текущей сессии
      * @param requestBody тело запроса с новым паролем
@@ -128,6 +133,7 @@ public final class UserController {
             return Response.badValidator();
         }
     }
+
 
     /**
      * Удалить пользователя по логину

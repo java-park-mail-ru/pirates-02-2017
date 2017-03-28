@@ -10,10 +10,15 @@ public class ApplicationController {
     protected final AccountService accountService;
     protected final ApplicationContext appContext;
 
-    public ApplicationController(@NotNull AccountService accountService,
-                             @NotNull ApplicationContext appContext) {
+
+    public ApplicationController(AccountService accountService, ApplicationContext appContext) {
         this.accountService = accountService;
         this.appContext = appContext;
+    }
+
+
+    public ApplicationController(ApplicationContext appContext) {
+        this(null, appContext);
     }
 
 }

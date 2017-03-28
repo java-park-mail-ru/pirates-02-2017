@@ -12,20 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
+
 @CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
         "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/validator")
-public class ValidatorController {
+public class ValidatorController extends ApplicationController {
 
-    private final AccountService accountService;
-    private final ApplicationContext appContext;
-
-    public ValidatorController(@NotNull AccountService accountService,
-                               @NotNull ApplicationContext appContext) {
-
-        this.accountService = accountService;
-        this.appContext = appContext;
+    public ValidatorController(AccountService accountService, ApplicationContext appContext) {
+        super(accountService, appContext);
     }
 
 
