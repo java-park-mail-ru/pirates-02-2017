@@ -20,12 +20,6 @@ public abstract class HibernateDAO<T extends Model<ID>, ID extends Serializable>
     @PersistenceContext
     private EntityManager entityManager;
 
-
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
-
     public abstract Class<T> getEntityClass();
 
 
@@ -37,24 +31,24 @@ public abstract class HibernateDAO<T extends Model<ID>, ID extends Serializable>
     @Transactional
     @Override
     public T persist(@NotNull T entity) {
-        this.getEntityManager().persist(entity);
-        this.getEntityManager().flush();
+        entityManager.persist(entity);
+        entityManager.flush();
 
-        return this.getEntityManager().find(this.getEntityClass(), entity.getId());
+        return entityManager.find(this.getEntityClass(), entity.getId());
     }
 
 
     @Transactional
     @Override
     public T find(@NotNull ID id) {
-        return this.getEntityManager().find(this.getEntityClass(), id);
+        return entityManager.find(this.getEntityClass(), id);
     }
 
 
     @Transactional
     @Override
     public int update(@NotNull String jpqlQuery, @Nullable Map<String, Object> params) {
-        final Query query = this.getEntityManager().createQuery(jpqlQuery);
+        final Query query = entityManager.createQuery(jpqlQuery);
 
         if (params != null) {
             for (Map.Entry<String, Object> entry: params.entrySet()) {
@@ -69,16 +63,16 @@ public abstract class HibernateDAO<T extends Model<ID>, ID extends Serializable>
     @Transactional
     @Override
     public void delete(@NotNull ID id) {
-        final T entity = this.getEntityManager().find(this.getEntityClass(), id);
+        final T entity = entityManager.find(this.getEntityClass(), id);
 
-        this.getEntityManager().remove(entity);
+        entityManager.remove(entity);
     }
 
 
     @Transactional
     @Override
     public void deleteAll() {
-        this.getEntityManager().createQuery(
+        entityManager.createQuery(
                 "DELETE FROM " + this.getEntityName() + " u").executeUpdate();
     }
 
@@ -86,7 +80,7 @@ public abstract class HibernateDAO<T extends Model<ID>, ID extends Serializable>
     @Transactional
     @Override
     public List<T> select(@NotNull String jpqlQuery, @Nullable Map<String, Object> params) {
-        final TypedQuery<T> query = this.getEntityManager().createQuery(jpqlQuery, this.getEntityClass());
+        final TypedQuery<T> query = entityManager.createQuery(jpqlQuery, this.getEntityClass());
 
         if (params != null) {
             for (Map.Entry<String, Object> entry: params.entrySet()) {
