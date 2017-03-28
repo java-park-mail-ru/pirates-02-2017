@@ -33,7 +33,7 @@ public class HibernateDAOTest {
     @Autowired
     private EntityManager entityManager;
 
-    private PasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
     private User user;
 
 

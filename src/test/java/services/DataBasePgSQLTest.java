@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
  * Тесты сервиса DbUserService в реальной postgresql базе
  */
 
+@SuppressWarnings("ConstantConditions")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 //@SpringBootTest(classes = {TestContext.class, ServiceTestConfiguration.class})

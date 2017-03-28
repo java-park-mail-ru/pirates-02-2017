@@ -20,6 +20,7 @@ public abstract class ApplicationController {
 
 
     public ApplicationController(ApplicationContext appContext) {
+        //noinspection ConstantConditions
         this(null, appContext);
     }
 

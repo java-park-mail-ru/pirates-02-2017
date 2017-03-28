@@ -112,15 +112,12 @@ public class SessionControllerTest {
                                 "\"login_or_email\":\"sergey\"," +
                                 "\"password\":\"qwerty123\"" +
                                 '}'))
-                .andDo(mvcResult -> {
-                    mockMvc
-                            .perform(post("/session/logout")
-                                    .sessionAttr(USER_ID, mvcResult.getRequest().getSession().getAttribute(USER_ID)))
-                            .andExpect(status().isOk())
-                            .andExpect(jsonPath("status").value(ErrorCodes.SUCCESS))
-                            .andExpect(jsonPath("error").value("User session deleted"))
-                    ;
-                })
+                .andDo(mvcResult -> mockMvc
+                        .perform(post("/session/logout")
+                                .sessionAttr(USER_ID, mvcResult.getRequest().getSession().getAttribute(USER_ID)))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("status").value(ErrorCodes.SUCCESS))
+                        .andExpect(jsonPath("error").value("User session deleted")))
         ;
     }
 
@@ -133,15 +130,12 @@ public class SessionControllerTest {
                                 "\"login_or_email\":\"sergey\"," +
                                 "\"password\":\"qwerty123\"" +
                                 '}'))
-                .andDo(mvcResult -> {
-                    mockMvc
-                            .perform(get("/session/current")
-                                    .sessionAttr(USER_ID, mvcResult.getRequest().getSession().getAttribute(USER_ID)))
-                            .andExpect(status().isOk())
-                            .andExpect(jsonPath("status").value(ErrorCodes.SUCCESS))
-                            .andExpect(jsonPath("login").value("sergey"))
-                    ;
-                })
+                .andDo(mvcResult -> mockMvc
+                        .perform(get("/session/current")
+                                .sessionAttr(USER_ID, mvcResult.getRequest().getSession().getAttribute(USER_ID)))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("status").value(ErrorCodes.SUCCESS))
+                        .andExpect(jsonPath("login").value("sergey")))
         ;
     }
 

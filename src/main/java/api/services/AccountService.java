@@ -66,6 +66,7 @@ public class AccountService extends AbstractService {
     }
 
 
+    @Nullable
     public User authenticateUser(@NotNull String value, @NotNull String password) {
         final User user = userRepository.findUserByLoginOrEmail(value);
 
