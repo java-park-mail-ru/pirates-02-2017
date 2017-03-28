@@ -2,7 +2,7 @@ package repositories;
 
 import api.Application;
 import api.model.User;
-import api.repository.UserRepositoryImpl;
+import api.repository_old.UserRepositoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

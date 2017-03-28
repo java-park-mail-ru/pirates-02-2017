@@ -2,8 +2,7 @@ package services;
 
 import api.Application;
 import api.model.User;
-import api.repository.UserRepository;
-import api.services.DbUserService;
+import api.repository_old.UserRepository;
 import api.services.generic.UserService;
 import api.utils.info.UserCreationInfo;
 //import com.github.springtestdbunit.DbUnitTestExecutionListener;

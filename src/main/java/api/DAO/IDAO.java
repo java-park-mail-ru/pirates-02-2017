@@ -1,4 +1,4 @@
-package api.repository2;
+package api.DAO;
 
 
 import api.model.Model;
@@ -35,7 +35,7 @@ public interface IDAO<T extends Model<ID>, ID extends Serializable> {
      */
     default int update(@NotNull String jpqlQuery) {
         return this.update(jpqlQuery, null);
-    };
+    }
 
 
     /**
@@ -67,7 +67,7 @@ public interface IDAO<T extends Model<ID>, ID extends Serializable> {
      */
     default List<T> select(@NotNull String jpqlQuery) {
         return this.select(jpqlQuery, null);
-    };
+    }
 
 
     /**

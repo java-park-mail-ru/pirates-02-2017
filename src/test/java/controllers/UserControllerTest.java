@@ -2,7 +2,7 @@ package controllers;
 
 import api.Application;
 import api.model.User;
-import api.repository.UserRepository;
+import api.repository_old.UserRepository;
 import api.utils.ErrorCodes;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;

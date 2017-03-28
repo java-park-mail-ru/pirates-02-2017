@@ -1,4 +1,4 @@
-package api.repository;
+package api.repository_old;
 
 import api.model.Model;
 import org.springframework.transaction.annotation.Transactional;

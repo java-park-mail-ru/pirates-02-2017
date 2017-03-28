@@ -1,14 +1,13 @@
 package api.services;
 
 import api.model.User;
-import api.repository.UserRepository;
+import api.repository_old.UserRepository;
 import api.services.generic.UserService;
 import api.utils.info.UserCreationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

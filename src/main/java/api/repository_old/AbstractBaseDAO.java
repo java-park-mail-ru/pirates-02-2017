@@ -1,11 +1,9 @@
-package api.repository;
+package api.repository_old;
 
 import api.model.Model;
-import api.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
 import java.io.Serializable;
 
 
