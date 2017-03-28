@@ -1,8 +1,7 @@
 package api.controllers;
 
-import api.services.DbUserService;
+import api.services.AccountService;
 import api.controllers.generic.ApplicationController;
-import api.services.generic.UserService;
 import api.utils.info.ValueInfo;
 import api.utils.response.*;
 import api.utils.validator.generic.Validator;
@@ -13,20 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
+
 @CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
         "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/validator")
-public class ValidatorController {
+public class ValidatorController extends ApplicationController {
 
-    private final UserService accountService;
-    private final ApplicationContext appContext;
-
-    public ValidatorController(@NotNull UserService accountService,
-                               @NotNull ApplicationContext appContext) {
-
-        this.accountService = accountService;
-        this.appContext = appContext;
+    public ValidatorController(AccountService accountService, ApplicationContext appContext) {
+        super(accountService, appContext);
     }
 
 

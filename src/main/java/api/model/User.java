@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Entity
 @PersistenceContext
 @Table(name = "users")
-public class User extends AbstractModel<Long> {
+public class User extends Model<Long> {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

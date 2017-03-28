@@ -1,9 +1,8 @@
 package api.controllers;
 
 import api.model.User;
-import api.services.DbUserService;
+import api.services.AccountService;
 import api.controllers.generic.ApplicationController;
-import api.services.generic.UserService;
 import api.utils.info.*;
 import api.utils.response.*;
 import api.utils.response.generic.ResponseBody;
@@ -16,17 +15,18 @@ import javax.servlet.http.HttpSession;
 
 import static api.controllers.SessionController.USER_ID;
 
+
 @CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
         "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/user")
-public final class UserController {
+public final class UserController extends ApplicationController {
 
-    private final UserService accountService;
+    private final AccountService accountService;
     private final ApplicationContext appContext;
 
-    public UserController(@NotNull UserService accountService,
-                          @NotNull ApplicationContext appContext) {
+    public UserController(AccountService accountService, ApplicationContext appContext) {
+        super(accountService, appContext);
         this.accountService = accountService;
         this.appContext = appContext;
     }
@@ -47,6 +47,7 @@ public final class UserController {
         return Response.okWithUser(user, "success");
     }
 
+
     /**
      * Зарегистрировать пользователя
      * @param requestBody <code>login, email, password</code> в формате json
@@ -63,6 +64,7 @@ public final class UserController {
         return Response.ok("User created");
         //return Response.userAlreadyExists();
     }
+
 
     /**
      * Изменить логин пользователя текущей сессии
@@ -86,6 +88,7 @@ public final class UserController {
         }
     }
 
+
     /**
      * Изменить email пользователя текущей сессии
      * @param requestBody тело запроса с новым email
@@ -107,6 +110,7 @@ public final class UserController {
             return Response.badValidator();
         }
     }
+
 
     /**
      * Изменить пароль пользователя текущей сессии
@@ -130,6 +134,7 @@ public final class UserController {
         }
     }
 
+
     /**
      * Удалить пользователя по логину
      * @param session объект <code>HttpSession</code> сессии пользователя
@@ -141,7 +146,7 @@ public final class UserController {
         final Object id = session.getAttribute(USER_ID);
 
         if (id instanceof Long) {
-            accountService.deleteUserbyId((Long) id);
+            accountService.deleteUserById((Long) id);
         } else {
             return Response.invalidSession();
         }

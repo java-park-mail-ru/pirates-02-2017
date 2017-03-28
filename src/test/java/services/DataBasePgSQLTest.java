@@ -3,8 +3,7 @@ package services;
 import api.Application;
 import api.model.User;
 import api.repository.UserRepository;
-import api.services.DbUserService;
-import api.services.generic.UserService;
+import api.services.AccountService;
 import api.utils.info.UserCreationInfo;
 //import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import org.junit.Before;
@@ -27,10 +26,10 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 //@SpringBootTest(classes = {TestContext.class, ServiceTestConfiguration.class})
-public class DataBasePosgresTest {
+public class DataBasePgSQLTest {
 
     @Autowired
-    UserService userService;
+    AccountService accountService;
 
     @Autowired
     UserRepository userRepository;
@@ -48,7 +47,7 @@ public class DataBasePosgresTest {
 
     @Test
     public void createUser() {
-        final User newUser = userService.createUser(new UserCreationInfo("sergey1", "email1@mail.ru",
+        final User newUser = accountService.createUser(new UserCreationInfo("sergey1", "email1@mail.ru",
                 "qwerty123"));
         assertNotEquals(null, newUser);
         assertEquals("sergey1", newUser.getLogin());
@@ -57,7 +56,7 @@ public class DataBasePosgresTest {
     @Test
     public void changeEmail(){
         final User user = userRepository.findUserByLogin("sergey");
-        userService.changeEmail(user.getId(), "e@yandex.ru");
+        accountService.changeEmail(user.getId(), "e@yandex.ru");
         final User changedUser = userRepository.findOne(user.getId());
         assertNotEquals(user.getEmail(), changedUser.getEmail());
         assertEquals("e@yandex.ru", changedUser.getEmail());
@@ -66,7 +65,7 @@ public class DataBasePosgresTest {
     @Test
     public void changeLoginl(){
         final User user = userRepository.findUserByLogin("sergey");
-        userService.changeLogin(user.getId(), "maxim");
+        accountService.changeLogin(user.getId(), "maxim");
         final User changedUser = userRepository.findOne(user.getId());
         assertNotEquals(user.getLogin(), changedUser.getLogin());
         assertEquals("maxim", changedUser.getLogin());
@@ -75,7 +74,7 @@ public class DataBasePosgresTest {
     @Test
     public void changePassword(){
         final User user = userRepository.findUserByLogin("sergey");
-        userService.changePassword(user.getId(), "123qwerty");
+        accountService.changePassword(user.getId(), "123qwerty");
         final User changedUser = userRepository.findOne(user.getId());
         assertNotEquals(user.getPassword(), changedUser.getPassword());
         assertEquals(true,
@@ -86,7 +85,7 @@ public class DataBasePosgresTest {
     public void deleteUser() {
         User user = userRepository.findUserByLogin("sergey");
         assertNotEquals(null, user);
-        userService.deleteUserbyId(user.getId());
+        accountService.deleteUserById(user.getId());
         user = userRepository.findUserByLogin("sergey");
         assertEquals(null,user);
     }
@@ -95,11 +94,11 @@ public class DataBasePosgresTest {
     public void authenticateUserSuccess() {
         final User user = userRepository.findUserByLogin("sergey");
 
-        User authUser = userService.authenticateUser(user.getLogin(), "qwerty123");
+        User authUser = accountService.authenticateUser(user.getLogin(), "qwerty123");
         assertNotEquals(null, authUser);
         assertEquals(user, authUser);
 
-        authUser = userService.authenticateUser(user.getEmail(), "qwerty123");
+        authUser = accountService.authenticateUser(user.getEmail(), "qwerty123");
         assertNotEquals(null, authUser);
         assertEquals(user, authUser);
     }
@@ -108,30 +107,30 @@ public class DataBasePosgresTest {
     public void authenticateUserError() {
         final User user = userRepository.findUserByLogin("sergey");
 
-        User authUser = userService.authenticateUser(user.getLogin(), "wrong password");
+        User authUser = accountService.authenticateUser(user.getLogin(), "wrong password");
         assertNull(authUser);
 
-        authUser = userService.authenticateUser("Unexpected login", "qwerty123");
+        authUser = accountService.authenticateUser("Unexpected login", "qwerty123");
         assertNull(authUser);
     }
 
     @Test
     public void getUserById() {
         final User user = userRepository.findUserByLogin("sergey");
-        User findedUser = userService.getUserById(user.getId());
+        User findedUser = accountService.getUserById(user.getId());
         assertEquals(user, findedUser);
 
-        findedUser = userService.getUserById(user.getId() + 1);
+        findedUser = accountService.getUserById(user.getId() + 1);
         assertNull(findedUser);
     }
 
     @Test
     public void getUserByLogin() {
         final User user = userRepository.findUserByLogin("sergey");
-        User findedUser = userService.getUserByLogin("sergey");
+        User findedUser = accountService.getUserByLogin("sergey");
         assertEquals(user, findedUser);
 
-        findedUser = userService.getUserByLogin("sergey11");
+        findedUser = accountService.getUserByLogin("sergey11");
         assertNull(findedUser);
     }
 }
