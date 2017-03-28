@@ -12,9 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Import(ValidatorContext.class)
 public class Application {
 
-    public static final String SECRET_TEST_KEY = "qcOluDht4uNCJwlIJdTEcxzytdLp4qTp3LLYwxJM";
-
-
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
     }
