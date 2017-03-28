@@ -4,6 +4,7 @@ package repositories;
 import api.Application;
 import api.DAO.HibernateDAO;
 import api.model.User;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +43,7 @@ public class HibernateDAOTest {
     }
 
 
+    @NotNull
     private String userTable() {
         return User.class.getSimpleName();
     }
