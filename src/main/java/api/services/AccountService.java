@@ -89,13 +89,6 @@ public class AccountService extends AbstractService {
     }
 
 
-    /*
-    public User getUserByLoginOrByEmail(@NotNull String login, @NotNull String email) {
-        return null;
-    }
-    */
-
-
     @Nullable
     public User getUserByLogin(@NotNull String login) {
         return userRepository.findUserByLogin(login);
