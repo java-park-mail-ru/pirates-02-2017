@@ -38,15 +38,6 @@ public class User extends Model<Long> {
         this.updatedAt = updatedAt;
     }
 
-    public User(Long id, String login, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.login = login;
-        this.email = email;
-        this.password = password;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
     public String getLogin() {
         return login;
     }
