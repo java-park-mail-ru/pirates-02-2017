@@ -25,9 +25,6 @@ public interface UserRepository {
     @Nullable
     User findUserByLoginOrEmail(@NotNull String loginOrEmail);
 
-    // @Nullable
-    // T findUsersByLoginOrByEmail(@NotNull String login, @NotNull String email);
-
     @Nullable
     User save(@NotNull User user);
 
