@@ -6,6 +6,8 @@ import api.services.generic.AbstractService;
 import api.utils.info.UserCreationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +15,17 @@ import java.time.LocalDateTime;
 
 
 @Service
-public class AccountService extends AbstractService {
+public class AccountService {
+
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    protected final UserRepository userRepository;
+    protected final PasswordEncoder encoder;
 
 
     AccountService (UserRepository userRepository, PasswordEncoder encoder) {
-        super(userRepository, encoder);
+        this.userRepository = userRepository;
+        this.encoder = encoder;
     }
 
 
