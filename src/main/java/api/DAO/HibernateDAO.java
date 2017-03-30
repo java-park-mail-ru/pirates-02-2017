@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public abstract class HibernateDAO<T extends Model<ID>, ID extends Serializable> implements DAO<T, ID> {
+public abstract class HibernateDAO<T extends Model<K>, K extends Serializable> implements DAO<T, K> {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -23,7 +23,7 @@ public abstract class HibernateDAO<T extends Model<ID>, ID extends Serializable>
     public abstract Class<T> getEntityClass();
 
 
-    public String getEntityName() {
+    private String getEntityName() {
         return this.getEntityClass().getSimpleName();
     }
 
@@ -40,7 +40,7 @@ public abstract class HibernateDAO<T extends Model<ID>, ID extends Serializable>
 
     @Transactional
     @Override
-    public T find(@NotNull ID id) {
+    public T find(@NotNull K id) {
         return entityManager.find(this.getEntityClass(), id);
     }
 
@@ -62,7 +62,7 @@ public abstract class HibernateDAO<T extends Model<ID>, ID extends Serializable>
 
     @Transactional
     @Override
-    public void delete(@NotNull ID id) {
+    public void delete(@NotNull K id) {
         final T entity = entityManager.find(this.getEntityClass(), id);
 
         entityManager.remove(entity);

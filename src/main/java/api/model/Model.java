@@ -1,13 +1,15 @@
 package api.model;
 
+import org.hibernate.boot.model.naming.Identifier;
+
 import java.io.Serializable;
 
 /**
  * Базовый класс всех моделей
  */
-public abstract class Model<ID extends Serializable> {
+public abstract class Model<K extends Serializable> {
 
-    public abstract ID getId();
+    public abstract K getId();
 
 
     public boolean isNew() {

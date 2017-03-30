@@ -30,7 +30,7 @@ public class EmailValidator extends Validator {
             return messages;
         }
 
-        if (!value.matches("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_.-]+\\.[a-zA-Z0-9_]+$")) {
+        if (!value.contains("@")) {
             messages.add(new ValidatorMessage(ValidatorStatus.ERROR, "Некорректный email!"));
             return messages;
         }
