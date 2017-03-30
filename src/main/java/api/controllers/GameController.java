@@ -27,6 +27,7 @@ public class GameController extends ApplicationController {
 
     /*
         ToDo: Add real scores, not the fake ones
+        ToDo: Replace POST with GET (also MAKE SURE to fix frontend)
      */
     @PostMapping("/scores")
     public ResponseEntity<?> scores(HttpSession session) {
