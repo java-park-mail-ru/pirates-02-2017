@@ -1,179 +1,120 @@
 package api.services;
 
 import api.model.User;
+import api.repository.UserRepository;
 import api.utils.info.UserCreationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 
 @Service
 public class AccountService {
 
-    private final PasswordEncoder encoder;
-    private final Map<Long, User> idToUser = new ConcurrentHashMap<>();
-    private final AtomicLong counter = new AtomicLong();
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    AccountService (PasswordEncoder encoder) {
+    protected final UserRepository userRepository;
+    protected final PasswordEncoder encoder;
+
+
+    AccountService (UserRepository userRepository, PasswordEncoder encoder) {
+        this.userRepository = userRepository;
         this.encoder = encoder;
     }
 
-    /**
-     * Создание пользователя
-     * @param userData объект UserCreationInfo тела запроса
-     */
-    public void createUser(@NotNull UserCreationInfo userData) {
-        final String encodedPassword = encoder.encode(userData.getPassword());
-        final User newUser = new User(counter.incrementAndGet(),
-                    userData.getLogin(), userData.getEmail(), encodedPassword, LocalDateTime.now(), LocalDateTime.now());
-            idToUser.put(newUser.getId(), newUser);
+
+    @Nullable
+    public User createUser(@NotNull UserCreationInfo userData) {
+        final User newUser = new User(userData.getLogin(), userData.getEmail(),
+                this.encoder.encode(userData.getPassword()), LocalDateTime.now(), LocalDateTime.now());
+
+        final User createdUser = (User) userRepository.save(newUser);
+        log.info("User created: {}", newUser.toString());
+
+        return createdUser;
     }
 
-    /**
-     * Изменить email пользователя
-     * @param id идентификатор
-     * @param email почта
-     */
-    public void changeEmail(@NotNull Long id,@NotNull String email) {
-        final User user = idToUser.get(id);
-        final User changedUser = new User(id, user.getLogin(), email, user.getPassword(),
-                user.getCreatedAt(), LocalDateTime.now());
 
-        idToUser.replace(id, changedUser);
-    }
+    public void changeEmail(long id, @NotNull String email) {
+        final int res = userRepository.updateEmail(id, email);
 
-    /**
-     * Изменить логин пользователя
-     * @param id идентификатор пользователя
-     * @param login новый логин
-     */
-    public void changeLogin(@NotNull Long id,@NotNull String login) {
-        final User user = idToUser.get(id);
-        final User changedUser = new User(id, login, user.getEmail(), user.getPassword(),
-                user.getCreatedAt(), LocalDateTime.now());
-
-        idToUser.replace(id, changedUser);
-    }
-
-    /**
-     * Изменить пароль
-     * @param id идентификатор пользователя
-     * @param password новый пароль
-     */
-    public void changePassword(@NotNull Long id,@NotNull String password) {
-        final User user = idToUser.get(id);
-        final User changedUser = new User(id, user.getLogin(), user.getEmail(), encoder.encode(password),
-                user.getCreatedAt(), LocalDateTime.now());
-
-        idToUser.replace(id, changedUser);
-    }
-
-    /**
-     * Удалить пользователя по id
-     * @param id идентификатор пользователя
-     * @return true если опреация прошла успешна, иначе false
-     */
-    public boolean deleteUserbyId(@NotNull Long id) {
-        final User user = idToUser.get(id);
-        if (user != null) {
-            idToUser.remove(id);
-            return true;
+        if (res > 0) {
+            log.info("User updated email: {}", email);
         }
-        return false;
     }
 
 
-    /**
-     * Аутентификация пользователя
-     * @param value логин или email
-     * @param password пароль
-     * @return объект <code>User</code> если операция прошла успешно, иначе null
-     */
+    public void changeLogin(long id, @NotNull String login) {
+        final int res = userRepository.updateLogin(id, login);
+
+        if (res > 0) {
+            log.info("User updated login: {}", login);
+        }
+    }
+
+
+    public void changePassword(long id, @NotNull String password) {
+        final int res = userRepository.updatePassword(id, encoder.encode(password));
+
+        if (res > 0) {
+            log.info("User updated password: {}", password);
+        }
+    }
+
+
+    public void deleteUserById(long id) {
+        userRepository.delete(id);
+        log.info("Delete user with id {}", id);
+    }
+
+
     @Nullable
     public User authenticateUser(@NotNull String value, @NotNull String password) {
-        final User user = getUserByLoginOrEmail(value);
-        if (user != null) {
-            if (encoder.matches(password, user.getPassword())) {
-                return user;
-            }
+        final User user = userRepository.findUserByLoginOrEmail(value);
+
+        if (user == null) {
+            return null;
         }
+
+        if (encoder.matches(password, user.getPassword())) {
+            log.info("User authenicated: {}", user.toString());
+            return user;
+        }
+
         return null;
     }
 
-    /**
-     * Найти пользователя по логину или email
-     * @param value логин или email
-     * @return Объект User если пользователь существует, иначе null
-     */
+
     @Nullable
     public User getUserByLoginOrEmail(@NotNull String value) {
-        for (User user : idToUser.values()) {
-            if (value.equals(user.getLogin()) || value.equals(user.getEmail())) {
-                return user;
-            }
-        }
-
-        return null;
+        return userRepository.findUserByLoginOrEmail(value);
     }
 
 
-    /**
-     * Вернуть пользователя по логину
-     * @param login логин
-     * @return объект <code>User</code> если пользователь существует, иначе null
-     */
     @Nullable
     public User getUserByLogin(@NotNull String login) {
-        for (User user: idToUser.values()) {
-            if (user.getLogin().equals(login)) {
-                return user;
-            }
-        }
-        return null;
+        return userRepository.findUserByLogin(login);
     }
 
 
-    /**
-     * Вернуть пользователя по id
-     * @param id Идентификатор пользователя
-     * @return объект <code>User</code> если пользователь существует, иначе null
-     */
     @Nullable
-    public User getUserById(@NotNull Long id) {
-        return idToUser.get(id);
+    public User getUserById(long id) {
+        return userRepository.findOne(id);
     }
 
-    /**
-     * Проверить существует ли пользователь, login уникален
-     * @param email емайл пользователя
-     * @return true если пользователь с таким емайлом существует, иначе false
-     */
-    public boolean hasEmail(@NotNull String email){
-        for (User user : idToUser.values()) {
-            if (user.getEmail().equals(email)) {
-                return true;
-            }
-        }
-        return false;
+
+    public boolean hasEmail(@NotNull String email) {
+        return userRepository.findUserByEmail(email) != null;
     }
 
-    /**
-     * Проверить существует ли пользователь, login уникален
-     * @param login логин пользователя
-     * @return true если пользователь с таким логином существует, иначе false
-     */
-    public boolean hasLogin(@NotNull String login){
-        for (User user : idToUser.values()) {
-            if (user.getLogin().equals(login)) {
-                return true;
-            }
-        }
-        return false;
+
+    public boolean hasLogin(@NotNull String login) {
+        return userRepository.findUserByLogin(login) != null;
     }
+
 }

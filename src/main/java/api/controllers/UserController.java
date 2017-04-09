@@ -2,29 +2,27 @@ package api.controllers;
 
 import api.model.User;
 import api.services.AccountService;
-import api.utils.info.UserCreationInfo;
-import api.utils.info.UserIdInfo;
-import api.utils.info.ValueInfo;
+import api.controllers.generic.ApplicationController;
+import api.utils.info.*;
 import api.utils.response.*;
-import api.utils.response.ResponseBody;
-import org.jetbrains.annotations.NotNull;
+import api.utils.response.generic.ResponseBody;
+import api.utils.validator.ValidatorChain;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 import static api.controllers.SessionController.USER_ID;
 
+
 @CrossOrigin(origins = {"https://tp314rates.herokuapp.com", "https://project-motion.herokuapp.com",
-        "http://localhost:3000", "http://127.0.0.1:3000"})
+        "http://localhost:3000", "*", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping(path = "/user")
-public class UserController {
+public final class UserController extends ApplicationController {
 
-    @NotNull
-    private final AccountService accountService;
-
-    public UserController(@NotNull AccountService accountService) {
-        this.accountService = accountService;
+    public UserController(AccountService accountService, ApplicationContext appContext) {
+        super(accountService, appContext);
     }
 
 
@@ -34,7 +32,7 @@ public class UserController {
      * @return json с сериализованным <code>User</code> объектом
      */
     @PostMapping("/getById")
-    public ResponseEntity<?> getUserById(@RequestBody UserIdInfo requestBody) {
+    public ResponseEntity<? extends ResponseBody> getUserById(@RequestBody UserIdInfo requestBody) {
         final User user = accountService.getUserById(requestBody.getId());
         if (user == null) {
             return Response.userNotFound();
@@ -43,19 +41,24 @@ public class UserController {
         return Response.okWithUser(user, "success");
     }
 
+
     /**
      * Зарегистрировать пользователя
      * @param requestBody <code>login, email, password</code> в формате json
      * @return json сообщение об исходе операции
      */
     @PostMapping("/create")
-    public ResponseEntity<ResponseBody> createUser(@RequestBody UserCreationInfo requestBody) {
-//  ToDo: сделать валидацию полеть в контроллере создания пользователя
-        if (true) {
-            return Response.ok("User created");
+    public ResponseEntity<? extends ResponseBody> createUser(@RequestBody UserCreationInfo requestBody) {
+
+        if (!ValidatorChain.isValid(requestBody, false, this.appContext)) {
+            return Response.badValidator();
         }
-        return Response.userAlreadyExists();
+
+        accountService.createUser(requestBody);
+        return Response.ok("User created");
+        //return Response.userAlreadyExists();
     }
+
 
     /**
      * Изменить логин пользователя текущей сессии
@@ -64,10 +67,10 @@ public class UserController {
      * @return json с результатом работы
      */
     @PostMapping("/changeLogin")
-    public ResponseEntity<ResponseBody> changeUserLogin(@RequestBody ValueInfo requestBody, HttpSession session) {
-        // ToDo: валидация
-        if (true) {
-            Object id = session.getAttribute(USER_ID);
+    public ResponseEntity<? extends ResponseBody> changeUserLogin(@RequestBody UserLoginInfo requestBody,
+                                                                  HttpSession session) {
+        if (ValidatorChain.isValid(requestBody, false, appContext)) {
+            final Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
                 accountService.changeLogin((Long) id, requestBody.getValue());
                 return Response.ok("Login changed");
@@ -79,6 +82,7 @@ public class UserController {
         }
     }
 
+
     /**
      * Изменить email пользователя текущей сессии
      * @param requestBody тело запроса с новым email
@@ -86,10 +90,10 @@ public class UserController {
      * @return json сообщение об исходи операции
      */
     @PostMapping("/changeEmail")
-    public ResponseEntity<ResponseBody> changeUserEmail(@RequestBody ValueInfo requestBody, HttpSession session) {
-        // ToDo: валидация
-        if (true) {
-            Object id = session.getAttribute(USER_ID);
+    public ResponseEntity<? extends ResponseBody> changeUserEmail(@RequestBody UserEmailInfo requestBody,
+                                                                  HttpSession session) {
+        if (ValidatorChain.isValid(requestBody, false, appContext)) {
+            final Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
                 accountService.changeEmail((Long) id, requestBody.getValue());
                 return Response.ok("Email changed");
@@ -101,6 +105,7 @@ public class UserController {
         }
     }
 
+
     /**
      * Изменить пароль пользователя текущей сессии
      * @param requestBody тело запроса с новым паролем
@@ -108,10 +113,10 @@ public class UserController {
      * @return json сообщение о работе
      */
     @PostMapping("/changePassword")
-    public ResponseEntity<ResponseBody> changeUserPassword(@RequestBody ValueInfo requestBody, HttpSession session) {
-        // ToDo: валидация
-        if (true) {
-            Object id = session.getAttribute(USER_ID);
+    public ResponseEntity<? extends ResponseBody> changeUserPassword(@RequestBody UserPasswordInfo requestBody,
+                                                                     HttpSession session) {
+        if (ValidatorChain.isValid(requestBody, false, appContext)) {
+            final Object id = session.getAttribute(USER_ID);
             if (id instanceof Long) {
                 accountService.changePassword((Long) id, requestBody.getValue());
                 return Response.ok("Login changed");
@@ -123,20 +128,19 @@ public class UserController {
         }
     }
 
+
     /**
      * Удалить пользователя по логину
      * @param session объект <code>HttpSession</code> сессии пользователя
      * @return json сообщение об исходе операции
      */
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteUser(HttpSession session) {
+    public ResponseEntity<? extends ResponseBody> deleteUser(HttpSession session) {
 
         final Object id = session.getAttribute(USER_ID);
 
         if (id instanceof Long) {
-            if (!accountService.deleteUserbyId((Long) id)) {
-                return Response.invalidSession();
-            }
+            accountService.deleteUserById((Long) id);
         } else {
             return Response.invalidSession();
         }

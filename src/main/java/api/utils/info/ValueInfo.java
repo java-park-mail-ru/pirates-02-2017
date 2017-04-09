@@ -1,9 +1,5 @@
 package api.utils.info;
 
-/**
- * Created by coon on 08.03.17.
- */
-
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

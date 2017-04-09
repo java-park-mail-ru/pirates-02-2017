@@ -1,5 +1,7 @@
-package api.utils.validator;
+package api.utils.validator.generic;
 
+import api.utils.validator.ValidatorMessage;
+import api.utils.validator.ValidatorStatus;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -16,7 +18,7 @@ public abstract class Validator {
 
 
     public boolean isValid(@NotNull String value, boolean strict) {
-        Iterable<ValidatorMessage> messages = this.validate(value);
+        final Iterable<ValidatorMessage> messages = this.validate(value);
 
         for (ValidatorMessage message: messages) {
             if ((message.status == ValidatorStatus.ERROR) ||

@@ -1,18 +1,36 @@
 package api.model;
 
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-public class User {
+@Entity
+@PersistenceContext
+@Table(name = "users")
+public class User extends Model<Long> {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private final Long id;
-    private final String login;
-    private final String email;
-    private final String password;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    @Column(name = "login", length = 50)
+    private String login;
 
-    public User(Long id, String login, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
+    @Column(name = "email", length = 50)
+    private String email;
+
+    @Column(name = "password", length = 100)
+    private String password;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    protected User(){};
+
+    public User(String login, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.login = login;
         this.email = email;
         this.password = password;
@@ -36,11 +54,22 @@ public class User {
         return createdAt;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "User [id=" + id +
+                ",login=" + login +
+                ",email=" + email +
+                ",password=" + password +
+                ",createdAt=" + createdAt +
+                ",updatedAt=" + updatedAt + ']';
     }
 }
